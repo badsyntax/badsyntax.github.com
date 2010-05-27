@@ -1,17 +1,39 @@
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td { margin:0; padding:0; border:0; outline:0; font-weight:inherit; font-style:inherit; font-size:100%; font-family:inherit; vertical-align:baseline; }
 body {
-	background: #FFFFFF;
+	background: #fff;
 	margin: 2em;
-	font: normal 70%/1.1 "Lucinda Grande", "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font: normal 84%/1.1 "Lucinda Grande", "Trebuchet MS", Arial, Helvetica, sans-serif;
 	color: #444;
 	overflow: hidden;
 }
 h1, h2, h3, h4 {
-	margin: 1em 0 .5em 0;
+	margin: 0 0 .5em 0;
+	font-family: 'Lobster', "Lucinda Grande", "Trebuchet MS", Arial, Helvetica, sans-serif;
+	border-bottom: 1px solid #ddd;
 }
 h1 {
-	font-size: 180%;
+	font-size: 190%;
 }
 h2 {
 	font-size: 140%;
+}
+ul {
+	margin-left: 2em;
+	margin-bottom: 1.5em;
+}
+li {
+	margin-bottom: .2em;
+}
+p {
+	margin-bottom: 1em;
+}
+a {
+	color: #333;
+}
+a:hover {
+	text-decoration: none;
+	color: #000;
+}
+small {
+	font-size: small;
 }
