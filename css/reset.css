@@ -21,6 +21,9 @@ ul {
 	margin-left: 2em;
 	margin-bottom: 1.5em;
 }
+ul ul {
+	margin: .4em 0 .6em 2em;
+}
 li {
 	margin-bottom: .2em;
 }

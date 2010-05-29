@@ -6,9 +6,10 @@
 	<meta http-equiv="Content-Style-Type" content="text/css" />
 	<link rel="stylesheet" type="text/css" media="screen" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/smoothness/jquery-ui.css" />
 	<link rel="stylesheet" type="text/css" media="screen" href="/css/reset.css" />
-	<link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type="text/css" media="screen" href="http://fonts.googleapis.com/css?family=Lobster" />
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="/js/global.js"></script>
 	<style type="text/css">
 		#wrapper {
 			width: 440px;
@@ -18,9 +19,15 @@
 			-moz-border-radius: 8px;
 			-webkit-border-radius: 8px;
 			border-radius: 8px;
-			-moz-box-shadow: 0 0 7px #AAAAAA;
-			-webkit-box-shadow: 0 0 7px #AAAAAA;
-			box-shadow: 0 0 7px #AAAAAA;
+			-moz-box-shadow: 0 0 7px #aaa;
+			-webkit-box-shadow: 0 0 7px #aaa;
+			box-shadow: 0 0 7px #aaa;
+		}
+		.toggle {
+			font-weight: bold;
+			font-size: 110%;
+			padding-left: 4px;
+			text-shadow: 1px 1px 1px #aaa;
 		}
 	</style>
 </head>
@@ -46,19 +53,72 @@
 		<div>
 			<h1>Richard Willis</h1>
 
-			<p>Welcome to my area on github. Please check out some of my code.</p>
+			<p>Welcome to my area on github.</p>
 
 			<br />
 
 			<h2>- Projects</h2>
-			<ul>
-				<li><a href="http://github.com/badsyntax/jquery-plugins">jquery-plugins</a></li>
-				<li><a href="http://github.com/badsyntax/jquery-spellchecker">jquery-spellchecker</a></li>
-				<li><a href="http://github.com/badsyntax/jquery-youtube-player">jquery-youtube-player</a></li>
-				<li><a href="http://github.com/badsyntax/domwalker.js">domwalker.js</a></li>
-				<li><a href="http://github.com/badsyntax/itunes-utils">itunes-utils</a></li>
-				<li><a href="http://github.com/badsyntax">View all projects</a></li>
+			<ul id="projects">
+				<li>
+					<a href="http://github.com/badsyntax/jquery-plugins">jquery-plugins</a>
+					<ul>
+						<li>
+							<a href="http://github.com/badsyntax/jquery-plugins/tree/master/tree/">ui tree</a>
+							<ul>
+								<li><a href="http://github.com/badsyntax/jquery-plugins/tree/master/tree/">Source</a></li>
+							</ul>
+						</li>
+						<li>
+							<a href="http://github.com/badsyntax/jquery-plugins/tree/master/splitbutton/">ui splitbutton</a>
+							<ul>
+								<li><a href="http://github.com/badsyntax/jquery-plugins/tree/master/splitbutton/">Source</a></li>
+								<li><a href="http://badsyntax.github.com/splitbutton.html">Demo</a></li>
+							</ul>
+						</li>
+						<li>
+							<a href="http://github.com/badsyntax/jquery-plugins/tree/master/scrollbar/">ui scrollbar</a>
+							<ul>
+								<li><a href="http://github.com/badsyntax/jquery-plugins/tree/master/scrollbar/">Source</a></li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="http://github.com/badsyntax/jquery-spellchecker">jquery-spellchecker</a>
+					<ul>
+						<li><a href="http://github.com/badsyntax/jquery-spellchecker">Source</a></li>
+						<li><a href="#">http://spellchecker.jquery.badsyntax.co.uk/</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="http://github.com/badsyntax/jquery-youtube-player">jquery-youtube-player</a>
+					<ul>
+						<li><a href="http://github.com/badsyntax/jquery-youtube-player">Source</a></li>
+						<li><a href="http://dubstep.uk.net">Demo</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="http://github.com/badsyntax/domwalker.js">domwalker.js</a>
+					<ul>
+						<li><a href="http://github.com/badsyntax/domwalker.js">Source</a></li>
+						<li><a href="#">http://badsyntax.co.uk/replace-text-in-html-natively.html</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="http://github.com/badsyntax/itunes-utils">itunes-utils</a>
+					<ul>
+						<li><a href="http://github.com/badsyntax/itunes-utils">Source</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="http://github.com/badsyntax">View all projects</a>
+				</li>
 			</ul>
+
+			<script type="text/javascript">
+				$('#projects').find('ul').hide().end().toggleNav({ speed: 220 });
+			</script>
+
 
 			<!--
 			<h2>- Demos:</h2>
@@ -75,8 +135,6 @@
 			<h2>- On the web</h2>
 			<ul>
 				<li><a href="http://twitter.com/badsyntax">twitter.com/badsyntax</a></li>
-				<li><a href="http://badsyntax.tumblr.com">badsyntax.tumblr.com</a></li>
-				<li><a href="http://www.facebook.com/badsyntax">facebook.com/badsyntax</a></li>
 			</ul>
 		</div>
 	</div>
