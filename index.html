@@ -1,35 +1,15 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html>
 <head>
 	<title>Badsyntax on Github</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="Content-Style-Type" content="text/css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/smoothness/jquery-ui.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="/css/reset.css" />
-	<link rel="stylesheet" type="text/css" media="screen" href="http://fonts.googleapis.com/css?family=Lobster" />
+	<link rel="stylesheet" type="text/css" media="screen" href="/css/screen.css" />
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="/js/global.js"></script>
-	<style type="text/css">
-		#wrapper {
-			width: 440px;
-			margin: 3em auto;
-			border: 1px solid #bbb;
-			padding: 2em;
-			-moz-border-radius: 8px;
-			-webkit-border-radius: 8px;
-			border-radius: 8px;
-			-moz-box-shadow: 0 0 7px #aaa;
-			-webkit-box-shadow: 0 0 7px #aaa;
-			box-shadow: 0 0 7px #aaa;
-		}
-		.toggle {
-			font-weight: bold;
-			font-size: 110%;
-			padding-left: 4px;
-			text-shadow: 1px 1px 1px #aaa;
-		}
-	</style>
+	<!--[if IE]>
+		<script type="text/javascript" src="/js/html5.js"></script>
+	<![endif]-->
 </head>
 <body>
 
@@ -44,20 +24,119 @@
 		})();
 	</script>	
 
-	<div id="wrapper">
+	<div id="github-ribbon">
 	
 		<a href="http://github.com/badsyntax">
 			<img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub" />
 		</a>
 
-		<div>
+	</div>
+
+	<div id="wrapper">
+
+		<header>
+
 			<h1>Richard Willis</h1>
 
 			<p>Welcome to my area on github.</p>
 
-			<br />
+		</header>
 
-			<h2>- Projects</h2>
+		<nav>
+			<ul class="helper-clearfix">
+				<li>
+					<a href="#">Home</a>
+				</li>
+				<li>
+					<a href="#projects">Projects</a>
+				</li>
+				<li>
+					<a href="#links">Links</a>
+				</li>
+				<li>
+					<a href="#contact">Contact</a>
+				</li>
+			</ul>
+		</nav>
+
+		<section id="activity">
+			<p>
+				<img src="/img/ajax_load.gif" id="loader" /> Loading activity..
+			</p>
+		</section>
+
+
+		<script type="text/javascript">
+
+			var list = $('<ul>'), repos = [], author = 'badsyntax', latest, ts = 0;
+
+			$.getJSON('http://rest.badsyntax.co.uk/github/get_repos/' + author + '?jsoncallback=?', function(data){
+
+				$.each(data, function( i, item ){
+
+					repos.push( item.name );
+
+					list.append( $('<li>').html( item.name ) );
+				});
+
+				var i = 0;
+
+				function getCommits( callback, finished ){
+
+					$.getJSON('http://rest.badsyntax.co.uk/github/get_commits/' + author + '/' + repos[i] + '/master?jsoncallback=?', function(data){
+
+						callback(data, repos[i]);
+						
+						i++;
+
+						if ( i < repos.length ) {
+
+							getCommits.apply(this, [ callback, finished ]);
+						} else {
+
+							finished.apply();
+						}
+					});
+				}
+
+				function callback(data, repo){
+
+					$.each(data, function(i, commit){
+
+						var 
+							segments = commit.committed_date.split('T'),
+
+							matches = segments[1].match(/([0-9]+:[0-9]+:[0-9]+)(.*)/),
+
+							d = segments[0].split('-'), 
+
+							t = matches[1].split(':'),
+
+							timestamp = new Date( d[0], d[1], d[2], t[0], t[1], t[2] );
+
+							if (timestamp.getTime() > ts ) {
+								latest = commit;
+								ts = timestamp.getTime();
+							}
+					});
+
+					console.debug(latest);
+				}
+
+				function finished(){
+
+					$('#loader').remove();
+				
+					list.appendTo( $('#activity').empty() );
+				}
+
+				getCommits(callback, finished);
+			});
+		</script>
+
+		<div class="helper-hidden">
+		<section>
+		<h2>- Projects</h2>
 			<ul id="projects">
 				<li>
 					<a href="http://github.com/badsyntax/jquery-plugins">jquery-plugins</a>
@@ -118,6 +197,7 @@
 			<script type="text/javascript">
 				$('#projects').find('ul').hide().end().toggleNav({ speed: 220 });
 			</script>
+		</section>
 
 
 			<!--
@@ -126,16 +206,19 @@
 				<li><a href="splitbutton.html">Split button</a></li>
 			</ul>
 			-->
-
+		<section>
 			<h2>- Contact</h2>
 			<ul>
 				<li><a href="mailto:willis.rh@gmail.com">willis.rh@gmail.com</a></li>
 			</ul>
+		</section>
 
+		<section>
 			<h2>- On the web</h2>
 			<ul>
 				<li><a href="http://twitter.com/badsyntax">twitter.com/badsyntax</a></li>
 			</ul>
+		</section>
 		</div>
 	</div>
 

@@ -1,0 +1,132 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td { margin:0; padding:0; border:0; outline:0; font-weight:inherit; font-style:inherit; font-size:100%; font-family:inherit; vertical-align:baseline; }
+body {
+	background: #fff;
+	margin: 0;
+	font: normal 84%/1.1 "Lucinda Grande", "Trebuchet MS", Arial, Helvetica, sans-serif;
+	color: #444;
+	overflow: hidden;
+}
+h1, h2, h3, h4 {
+	margin: 0 0 .5em 0;
+	font-family: 'Lobster', "Lucinda Grande", "Trebuchet MS", Arial, Helvetica, sans-serif;
+	border-bottom: 1px solid #ddd;
+}
+h1 {
+	font-size: 190%;
+}
+h2 {
+	font-size: 140%;
+}
+ul {
+	margin-left: 2em;
+	margin-bottom: 1.5em;
+}
+ul ul {
+	margin: .4em 0 .6em 2em;
+}
+li {
+	margin-bottom: .2em;
+}
+p {
+	margin-bottom: 1em;
+}
+a {
+	color: #333;
+}
+a:hover {
+	text-decoration: none;
+	color: #000;
+}
+small {
+	font-size: small;
+}
+@font-face {
+	font-family: 'Lobster';
+	font-style: normal;
+	font-weight: normal;
+	src: local('Lobster'), url('http://themes.googleusercontent.com/font?kit=X-CahsKZZcJfSyZ_tX4ptg') format('truetype');
+}
+
+
+#wrapper {
+	width: 520px;
+	margin: 3.2em auto;
+	border: 1px solid #bbb;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+	-moz-box-shadow: 0 0 7px #aaa;
+	-webkit-box-shadow: 0 0 7px #aaa;
+	box-shadow: 0 0 7px #aaa;
+}
+.toggle {
+	font-weight: bold;
+	font-size: 110%;
+	padding-left: 4px;
+	text-shadow: 1px 1px 1px #aaa;
+}
+header {
+	display: block;
+	padding: 2em 2em .5em 2em;
+}
+nav {
+	display: block;
+	border-top: 1px solid #bbb;
+	border-bottom: 1px solid #aaa;
+	margin: 0 0 2em 0;
+	padding: 0 .8em;
+	background: url(/img/nav_bg.jpg) repeat-x center bottom;
+	-moz-box-shadow: 0px 2px 1px #eee;
+	-webkit-box-shadow: 0 2px 1px #eee;
+	box-shadow: 0 2px 1px #eee;
+}
+nav ul {
+	margin: 0;
+	padding: 0;
+}
+nav ul li {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+nav ul li a {
+	float: left;
+	padding: .5em 1.2em;
+	text-decoration: none;
+	outline: none;
+}
+nav ul li a:hover {
+	-moz-box-shadow: 0 0 4px #666;
+	-webkit-box-shadow: 0 0 4px #666;
+	box-shadow: 0 0 4px #666;
+}
+section {
+	display: block;
+	padding: 0 2em 1em 2em;
+}
+
+#loader {
+	margin-right: .2em;
+}
+
+.helper-hidden {
+	display: none;
+}
+.helper-clearfix:after { 
+	content: "."; 
+	display: block; 
+	height: 0; 
+	clear: both; 
+	visibility: hidden; 
+}
+.helper-clearfix { 
+	display: inline-block; 
+}
+/* required comment for clearfix to work in Opera \*/
+* html .helper-clearfix { 
+	height: 1%; 
+}
+.helper-clearfix { 
+	display: block; 
+}
+
