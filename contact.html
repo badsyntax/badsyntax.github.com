@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Badsyntax (Richard Willis) on Github</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-Style-Type" content="text/css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="/css/screen.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/smoothness/jquery-ui.css" />
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script type="text/javascript" src="/js/jquery-ui.js"></script>
+	<script type="text/javascript" src="/js/global.js"></script>
+	<!--[if IE]>
+		<script type="text/javascript" src="/js/html5.js"></script>
+	<![endif]-->
+</head>
+<body>
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-1636725-23']);
+		_gaq.push(['_trackPageview']);
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>	
+
+	<div id="github-ribbon">
+		<a href="http://github.com/badsyntax">
+			<img src="http://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub" />
+		</a>
+	</div>
+
+	<div id="wrapper" class="ui-helper-clearfix">
+
+		<header>
+
+			<h1>
+				<a href="/">Richard Willis</a>
+			</h1>
+
+			<p>Welcome to my area on github.</p>
+
+		</header>
+
+		<nav class="ui-helper-clearfix">
+			<ul class="helper-left">
+				<li><a href="/">Overview</a></li>
+				<li><a href="projects.html">Projects</a></li>
+				<li><a href="#links">Links</a></li>
+				<li><a href="contact.html" class="selected">Contact</a></li>
+			</ul>
+		</nav>
+
+		<section>
+			
+			<h2>Contact details</h2>
+
+			<ul>
+				<li><a href="http://twitter.com/badsyntax">twitter.com/badsyntax</a></li>
+				<li><a href="mailto:willis.rh@gmail.com">willis.rh@gmail.com</a></li>
+				<li><a href="http://badsyntax.co.uk">badsyntax.co.uk</a></li>
+			</ul>
+
+		</section>
+
+		<section>
+			
+			<h2>Message me</h2>
+
+			<form id="contact-form">
+
+				<fieldset>
+					
+					<p>
+						<label for="name">Name</label>
+						<input class="ui-widget-content ui-corner-all" type="text" id="name" name="name" />
+					</p>
+
+					<p>
+						<label for="email">Email</label>
+						<input class="ui-widget-content ui-corner-all" type="text" id="email" name="email" />
+					</p>
+
+					<p>
+						<label for="message">Message</label>
+						<textarea class="ui-helper-clearfix ui-widget-content ui-corner-all" id="message"></textarea>
+					</p>
+
+					<p>
+						<label>&nbsp;</label>
+						<button type="submit">
+							Send it
+						</button>
+					</p>
+
+				</fieldset>
+			</form>
+
+		</section>
+
+		<script type="text/javascript">
+
+			var 
+				error = $( '<span />' ).addClass('error'), 
+				load = $('<span />' ).addClass('loading'),
+				submit = $('button').button().after( error ).after( load );
+
+			$('#contact-form').submit(function(event){
+
+				var errors = [];
+
+				event.preventDefault();
+
+				$( this ).find('input, textarea').each(function(){
+
+					if ( !this.value ) {
+
+						errors.push({
+							field: this,
+							message: 'empty'
+						});
+					}
+				});
+
+				if ( errors.length ) {
+
+					error.html('Errors!');
+
+				} else {
+
+					var data = $( this ).serialize();
+	
+					error.html('');
+				}
+
+				
+			});
+		</script>
+
+	</div>
+</body>
+</html>
