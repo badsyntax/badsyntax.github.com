@@ -6,6 +6,9 @@ body {
 	color: #444;
 	overflow: hidden;
 }
+table {
+	border-spacing: 0;
+}
 h1, h2, h3, h4 {
 	margin: 0 0 .5em 0;
 	font-family: 'Lobster', "Lucinda Grande", "Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -46,7 +49,12 @@ small {
 	font-weight: normal;
 	src: local('Lobster'), url('http://themes.googleusercontent.com/font?kit=X-CahsKZZcJfSyZ_tX4ptg') format('truetype');
 }
-
+@font-face {
+	font-family: 'Droid Sans Mono';
+	font-style: normal;
+	font-weight: normal;
+	src: local('Droid Sans Mono'), url('http://themes.googleusercontent.com/font?kit=ns-m2xQYezAtqh7ai59hJViAdY2Sz5g753dOuB6TK0I') format('truetype');
+}
 
 #wrapper {
 	width: 520px;
@@ -69,6 +77,13 @@ header {
 	display: block;
 	padding: 2em 2em .5em 2em;
 }
+header a {
+	text-decoration: none;
+	color: #444;
+}
+header a:hover {
+	color: #000;
+}
 nav {
 	display: block;
 	border-top: 1px solid #bbb;
@@ -79,38 +94,165 @@ nav {
 	-moz-box-shadow: 0px 2px 1px #eee;
 	-webkit-box-shadow: 0 2px 1px #eee;
 	box-shadow: 0 2px 1px #eee;
+	text-align: center;
 }
 nav ul {
-	margin: 0;
+	margin: 0 auto;
 	padding: 0;
+	width: auto;
+	margin-left: 1.4em;
+	border-left: 1px solid #fff;
+	border-right: 1px solid #ddd;
 }
 nav ul li {
 	list-style: none;
 	margin: 0;
 	padding: 0;
+	width: 8.5em;
+	float: left;
 }
 nav ul li a {
-	float: left;
-	padding: .5em 1.2em;
+	display: block;
+	padding: .7em 1.5em;
 	text-decoration: none;
+	text-align: center;
+	font-size: 110%;
+	text-transform: uppercase;
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #fff;
 	outline: none;
 }
-nav ul li a:hover {
-	-moz-box-shadow: 0 0 4px #666;
-	-webkit-box-shadow: 0 0 4px #666;
-	box-shadow: 0 0 4px #666;
+nav ul li a.selected {
+	text-decoration: underline;
 }
+nav ul li a:hover {
+	border: 1px solid #aaa;
+	border-width: 0 1px;
+	-moz-box-shadow: 0 0 3px #888;
+	-webkit-box-shadow: 0 0 3px #888;
+	box-shadow: 0 0 3px #888;
+	text-shadow: 1px 1px 1px #ccc;
+}
+nav ul li a:active {
+	-moz-box-shadow: 0 0 4px #333;
+	-webkit-box-shadow: 0 0 4px #333;
+	box-shadow: 0 0 4px #333;
+}
+
 section {
 	display: block;
-	padding: 0 2em 1em 2em;
+	padding: 0 2em;
+	margin-bottom: 1.8em;
+}
+
+#commits-scroll {
+	max-height: 15em;
+	white-space: nowrap;
+	font-size: 88%;
+	letter-spacing: 0;
+}
+#commits-scroll td {
+	padding: 6px;
+}
+#commits-scroll td.col1 {
+	padding-right: 0;
+}
+#commits-scroll td.col2 {
+	padding-left: 0;
+}
+
+#repositories, #commits {
+	display: none;
 }
 
 #loader {
 	margin-right: .2em;
 }
 
+a.more-info {
+	float: right;
+	font-size: 80%;
+	text-decoration: none;
+	padding: .2em .4em;
+	border: 1px solid #fff;
+	-moz-border-radius: 4px;
+}
+a.more-info:hover {
+	border-color: #aaa;
+	-moz-box-shadow: 0 0 3px #888;
+	background: url(/img/nav_bg.jpg) repeat-x center top;
+}
+
+#contact-form {
+	margin-top: 2em;
+	margin-left: 1em;
+}
+#contact-form label {
+	float: left;
+	width: 6em;
+}
+#contact-form input {
+	padding: .4em .5em;
+	width: 18em;
+	background: transparent;
+}
+#contact-form textarea {
+	padding: .4em .5em;
+	width: 25em;
+	height: 8em;
+}
+
+#contact-form input:focus, #contact-form textarea:focus {
+	-moz-box-shadow: 0 0 2px #aaa;
+}
+#contact-form .error {
+	margin-left: .6em;
+}
+
+#github-ribbon {
+	position: absolute; 
+	top: 0; 
+	right: 0; 
+	border: 0;
+}
+
+button.ui-state-default {
+	font-size: 90%;
+	background: url(/img/nav_bg.jpg) repeat-x;
+	text-shadow: 1px 1px 1px #eee;
+}
+button.ui-state-hover {
+	-moz-box-shadow: 0 0 2px #aaa;
+}
+.ui-widget {
+	font-size: 1em !important;
+}
+.ui-accordion .ui-accordion-content {
+	font-size: 90%;
+}
+#accordion h3 {
+	font-family: "Lucinda Grande", "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+.ui-accordion .ui-accordion-header {
+	background: url(/img/nav_bg.jpg) repeat-x center top;
+}
+.ui-accordion h3.ui-state-hover {
+	-moz-box-shadow: 0 0 4px #aaa;
+}
+.ui-accordion-content-active { 
+}
+.ui-scrollbar-container .ui-scrollbar-content-container {
+	padding: 0 !important;
+}
+.ui-scrollbar-container .even {
+	background: #f9f9f9;
+}
+
 .helper-hidden {
 	display: none;
+}
+.helper-left {
+	float: left;
 }
 .helper-clearfix:after { 
 	content: "."; 

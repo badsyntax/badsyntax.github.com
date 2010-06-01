@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Badsyntax on Github</title>
+	<title>Badsyntax (Richard Willis) on Github</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="Content-Style-Type" content="text/css" />
 	<link rel="stylesheet" type="text/css" media="screen" href="/css/screen.css" />
+	<!-- <link rel="stylesheet" type="text/css" media="screen" href="http://github.com/badsyntax/jquery-plugins/raw/master/scrollbar/css/jquery.ui.scrollbar.css" /> -->
+	<link rel="stylesheet" type="text/css" media="screen" href="http://jquery-plugins.localdomain/scrollbar/css/jquery.ui.scrollbar.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/smoothness/jquery-ui.css" />
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-	<script type="text/javascript" src="/js/global.js"></script>
 	<!--[if IE]>
 		<script type="text/javascript" src="/js/html5.js"></script>
 	<![endif]-->
@@ -24,114 +26,101 @@
 		})();
 	</script>	
 
+	<!--
 	<div id="github-ribbon">
-	
 		<a href="http://github.com/badsyntax">
-			<img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub" />
+			<img src="http://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub" />
 		</a>
-
 	</div>
+	-->
 
-	<div id="wrapper">
+	<div id="wrapper" class="ui-helper-clearfix">
 
 		<header>
 
-			<h1>Richard Willis</h1>
+			<h1>
+				<a href="/">Richard Willis</a>
+			</h1>
 
 			<p>Welcome to my area on github.</p>
 
 		</header>
 
-		<nav>
-			<ul class="helper-clearfix">
-				<li>
-					<a href="#">Home</a>
-				</li>
-				<li>
-					<a href="#projects">Projects</a>
-				</li>
-				<li>
-					<a href="#links">Links</a>
-				</li>
-				<li>
-					<a href="#contact">Contact</a>
-				</li>
+		<nav class="ui-helper-clearfix">
+			<ul class="helper-left">
+				<li><a href="/" class="selected">Overview</a></li>
+				<li><a href="projects.html">Projects</a></li>
+				<li><a href="about.html">About</a></li>
+				<li><a href="contact.html">Contact</a></li>
 			</ul>
 		</nav>
+		
+		<script type="text/javascript" src="/js/jquery-ui.js"></script>
+		<script type="text/javascript" src="/js/jquery.mousewheel.min.js"></script>
+		<script type="text/javascript" src="http://jquery-plugins.localdomain/scrollbar/js/jquery.ui.scrollbar.js"></script>
+		<!--<script type="text/javascript" src="http://github.com/badsyntax/jquery-plugins/raw/master/render/js/jquery.render.js"></script>-->
+		<script type="text/javascript" src="http://jquery-plugins.localdomain/render/js/jquery.render.js"></script>
+		<script type="text/javascript" src="/js/github.js"></script>
 
-		<section id="activity">
-			<p>
-				<img src="/img/ajax_load.gif" id="loader" /> Loading activity..
-			</p>
-		</section>
 
+		<div id="activity">
+			<section id="loader">
+				<p>
+					<img src="/img/ajax_load.gif" /> loading github data..
+				</p>
+			</section>
+			<section id="repositories">
+				<h2>Repositories</h2>
+				<p>
+					I currently have ${public_repo_count} public repositories on github, am following ${following_count} coders, 
+					have ${followers_count} followers.
+				</p>
+			</section>
+			<section id="commits">
+				<a class="more-info" href="http://github.com/badsyntax">More info</a>
+				<h2>Latest commits</h2>
+				<div id="commits-scroll">${commits}</div>
+			</section>
+		</div>
 
 		<script type="text/javascript">
 
-			var list = $('<ul>'), repos = [], author = 'badsyntax', latest, ts = 0;
+			(function( $ ){
 
-			$.getJSON('http://rest.badsyntax.co.uk/github/get_repos/' + author + '?jsoncallback=?', function(data){
+				( new github({ user: 'badsyntax' }) )
 
-				$.each(data, function( i, item ){
+					.getUserInfo(function(){
 
-					repos.push( item.name );
 
-					list.append( $('<li>').html( item.name ) );
-				});
+						this.getLatestCommits(function(){
 
-				var i = 0;
+						var commitstr = '<table>';
 
-				function getCommits( callback, finished ){
+						$.each(this.data.latestcommits, function(i){
 
-					$.getJSON('http://rest.badsyntax.co.uk/github/get_commits/' + author + '/' + repos[i] + '/master?jsoncallback=?', function(data){
+							commitstr += 
+								'<tr class="' + ( i % 2 ? 'even' : 'odd' ) + '"><td class="col1">' 
+								+ this.committed_date_formatted
+								+ '</td><td class="col2">&nbsp;-&nbsp;<a href="' + this.url + '">' 
+								+ this.repo + '</a> - ' 
+								+ this.message + '</td></tr>';
+		
+						});
+		
+						commitstr += '</table>';
 
-						callback(data, repos[i]);
-						
-						i++;
+						$('#activity section').show();
+					
+						$('#loader').hide();
 
-						if ( i < repos.length ) {
+						$('#repositories').render( this.data.userinfo );
 
-							getCommits.apply(this, [ callback, finished ]);
-						} else {
-
-							finished.apply();
-						}
-					});
-				}
-
-				function callback(data, repo){
-
-					$.each(data, function(i, commit){
-
-						var 
-							segments = commit.committed_date.split('T'),
-
-							matches = segments[1].match(/([0-9]+:[0-9]+:[0-9]+)(.*)/),
-
-							d = segments[0].split('-'), 
-
-							t = matches[1].split(':'),
-
-							timestamp = new Date( d[0], d[1], d[2], t[0], t[1], t[2] );
-
-							if (timestamp.getTime() > ts ) {
-								latest = commit;
-								ts = timestamp.getTime();
-							}
+						$('#commits-scroll').html( commitstr ).scrollbar();
+	
+						});
 					});
 
-					console.debug(latest);
-				}
-
-				function finished(){
-
-					$('#loader').remove();
-				
-					list.appendTo( $('#activity').empty() );
-				}
-
-				getCommits(callback, finished);
-			});
+			})( jQuery );
 		</script>
 
 		<div class="helper-hidden">
@@ -194,9 +183,6 @@
 				</li>
 			</ul>
 
-			<script type="text/javascript">
-				$('#projects').find('ul').hide().end().toggleNav({ speed: 220 });
-			</script>
 		</section>
 
 
