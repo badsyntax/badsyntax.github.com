@@ -20,6 +20,9 @@ h1 {
 h2 {
 	font-size: 140%;
 }
+em {
+	font-style: italic;
+}
 ul {
 	margin-left: 2em;
 	margin-bottom: 1.5em;
@@ -57,7 +60,7 @@ small {
 }
 
 #wrapper {
-	width: 520px;
+	width: 518px;
 	margin: 3.2em auto;
 	border: 1px solid #bbb;
 	-moz-border-radius: 8px;
@@ -75,7 +78,7 @@ small {
 }
 header {
 	display: block;
-	padding: 2em 2em .5em 2em;
+	padding: 2em 26px .5em 26px;
 }
 header a {
 	text-decoration: none;
@@ -89,7 +92,6 @@ nav {
 	border-top: 1px solid #bbb;
 	border-bottom: 1px solid #aaa;
 	margin: 0 0 2em 0;
-	padding: 0 .8em;
 	background: url(/img/nav_bg.jpg) repeat-x center bottom;
 	-moz-box-shadow: 0px 2px 1px #eee;
 	-webkit-box-shadow: 0 2px 1px #eee;
@@ -100,7 +102,7 @@ nav ul {
 	margin: 0 auto;
 	padding: 0;
 	width: auto;
-	margin-left: 1.4em;
+	margin-left: 26px;
 	border-left: 1px solid #fff;
 	border-right: 1px solid #ddd;
 }
@@ -108,7 +110,7 @@ nav ul li {
 	list-style: none;
 	margin: 0;
 	padding: 0;
-	width: 8.5em;
+	width: 116px;
 	float: left;
 }
 nav ul li a {
@@ -141,12 +143,12 @@ nav ul li a:active {
 
 section {
 	display: block;
-	padding: 0 2em;
+	padding: 0 26px;
 	margin-bottom: 1.8em;
 }
 
 #commits-scroll {
-	max-height: 15em;
+	max-height: 150px;
 	white-space: nowrap;
 	font-size: 88%;
 	letter-spacing: 0;
@@ -195,15 +197,18 @@ a.more-info:hover {
 	padding: .4em .5em;
 	width: 18em;
 	background: transparent;
+	border-color: #888;
 }
 #contact-form textarea {
 	padding: .4em .5em;
 	width: 25em;
 	height: 8em;
+	border-color: #888;
 }
 
 #contact-form input:focus, #contact-form textarea:focus {
-	-moz-box-shadow: 0 0 2px #aaa;
+	-moz-box-shadow: 0 0 3px #aaa;
+	border-color: #000;
 }
 #contact-form .error {
 	margin-left: .6em;
@@ -224,13 +229,20 @@ button.ui-state-default {
 button.ui-state-hover {
 	-moz-box-shadow: 0 0 2px #aaa;
 }
+button.ui-state-active {
+	-moz-box-shadow: 0 0 2px #222;
+	border-color: #666;
+}
 .ui-widget {
 	font-size: 1em !important;
 }
 .ui-accordion .ui-accordion-content {
 	font-size: 90%;
 }
-#accordion h3 {
+.accordion {
+	margin-bottom: 2em;
+}
+.accordion h3 {
 	font-family: "Lucinda Grande", "Trebuchet MS", Arial, Helvetica, sans-serif;
 }
 .ui-accordion .ui-accordion-header {
@@ -239,12 +251,15 @@ button.ui-state-hover {
 .ui-accordion h3.ui-state-hover {
 	-moz-box-shadow: 0 0 4px #aaa;
 }
+.ui-accordian h3.ui-state-hover a {
+	color: #000;
+}
 .ui-accordion-content-active { 
 }
 .ui-scrollbar-container .ui-scrollbar-content-container {
 	padding: 0 !important;
 }
-.ui-scrollbar-container .even {
+.ui-scrollbar-container .odd {
 	background: #f9f9f9;
 }
 
@@ -272,3 +287,90 @@ button.ui-state-hover {
 	display: block; 
 }
 
+
+
+.ui-accordion .ui-accordion-content {
+	padding: 0;
+}
+.ui-accordion .ui-accordion-content div {
+	margin: 1em;
+}
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
+	color: #333;
+	text-shadow: 1px 1px 1px #fff;
+}
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+	color: #000;
+}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+	border-top: 1px solid #ddd;
+	border-left: 1px solid #ddd;
+}
+
+
+/*
+ * jquery.ui.scrollbar.css
+ *
+ * notes: added !important declarations to support themeswitcher
+ *
+ */
+
+.ui-scrollbar-container {
+	overflow: hidden;
+	position: relative;
+}
+.ui-scrollbar-base {
+	position: absolute;
+	width: 18px;
+	top: 18px;
+}
+.ui-scrollbar-base-container {
+	position: absolute;
+	width: 18px;
+	top: 1px;
+	right: 1px;
+}
+.ui-scrollbar-face {
+	cursor: pointer;
+	position: absolute;
+	width: 14px;
+	top: 0;
+	right: 1px;
+}
+.ui-scrollbar-face .ui-icon {
+	margin-top: 50%;
+}
+.ui-scrollbar-container .ui-scrollbar-arrow-up {
+	cursor: pointer;
+	position: absolute;
+	right: 3px;
+	top: 2px;
+	background: transparent !important;
+	border: 0 !important;
+	z-index: 10;
+}
+.ui-scrollbar-container .ui-scrollbar-arrow-down {
+	cursor: pointer;
+	position: absolute;
+	right: 3px;
+	bottom: 2px;
+	background: transparent !important;
+	border: 0 !important;
+	z-index: 10;
+}
+.ui-scrollbar-state-hover {
+	background: #eee;
+}
+.ui-scrollbar-container .ui-iconi {
+
+}
+
+.ui-scrollbar-container .ui-scrollbar-content-container {
+	margin-right: 28px;
+	padding: .6em;
+	overflow: hidden;
+}
+
+.ui-scrollbar-container .ui-scrollbar-arrow-state-active {
+
+}
