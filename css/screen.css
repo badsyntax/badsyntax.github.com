@@ -4,7 +4,6 @@ body {
 	margin: 0;
 	font: normal 84%/1.1 "Lucinda Grande", "Trebuchet MS", Arial, Helvetica, sans-serif;
 	color: #444;
-	overflow: hidden;
 }
 table {
 	border-spacing: 0;
@@ -148,7 +147,7 @@ section {
 }
 
 #commits-scroll {
-	max-height: 150px;
+	max-height: 204px;
 	white-space: nowrap;
 	font-size: 88%;
 	letter-spacing: 0;
