@@ -71,7 +71,7 @@
 						<tbody>
 							<tr>
 								<td class="col1">${committed_date_formatted}</td>
-								<td class="col2">&nbsp;-&nbsp;<a href="${url}">${repo}</a> - ${message}</td>
+								<td class="col2">&nbsp;-&nbsp;<a href="">${repo}</a> - ${message}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -89,7 +89,7 @@
 			github.getUserInfo(function(){
 
 				github.getLatestCommits(function(){
-
+					
 					var commitstr = '', template = $('#commits-scroll tbody').children().clone();
 
 					$('#commits-scroll tbody').empty();
@@ -99,6 +99,9 @@
 						template
 							.clone()
 							.render( this )
+							.find('a')
+								.attr('href', this.url)
+								.end()
 							.appendTo( $('#commits-scroll table') )
 					});
 		
