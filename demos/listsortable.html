@@ -11,6 +11,9 @@
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="http://github.com/badsyntax/jquery-plugins/raw/master/listsortable/js/jquery.ui.listsortable.js"></script>
 	<style type="text/css">
+		body {
+			margin: 0;
+		}
 		li a {
 			display: block;
 			padding: .5em;
@@ -18,10 +21,17 @@
 	</style>
 </head>
 <body>
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-1636725-23']);
+		_gaq.push(['_trackPageview']);
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>	
 	<div>
-
-		<h2>Sortable List</h2>
-
 		<div class="ui-widget-content ui-corner-all" style="width: 300px">
 			<ul class="listsortable">
 				<li><a href="#">Item 1</a></li>
@@ -29,33 +39,27 @@
 					<a href="#">Item 2</a>
 					<ul>
 						<li><a href="#">Item 3</a></li>
-						<li><a href="#">Item 4</a></li>
-						<li><a href="#">Item 5</a></li>
-						<li><a href="#">Item 6</a></li>
-						<li><a href="#">Item 7</a></li>
 						<li>
-							<a href="#">Item 8</a>
+							<a href="#">Item 4</a>
 							<ul>
-								<li><a href="#">Item 9</a></li>
-								<li><a href="#">Item 10</a></li>
-								<li><a href="#">Item 11</a></li>
+								<li><a href="#">Item 5</a></li>
+								<li><a href="#">Item 6</a></li>
+								<li><a href="#">Item 7</a></li>
 							</ul>
 						</li>
 					</ul>
 				</li>
-				<li><a href="#">Item 12</a></li>
+				<li><a href="#">Item 8</a></li>
 			</ul>
 		</div>
 
 		<br />
 
-		<h2>Create / Destroy</h2>
-		
 		<button id="create">
-			Create sortable
+			Create
 		</button>
 		<button id="destroy">
-			Destroy sortable
+			Destroy
 		</button>
 	</div>
 

@@ -60,7 +60,7 @@ small {
 
 #wrapper {
 	width: 518px;
-	margin: 3.2em auto;
+	margin: 3.2em auto 1em auto;
 	border: 1px solid #bbb;
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
@@ -262,37 +262,20 @@ button.ui-state-active {
 	background: #f9f9f9;
 }
 
-.helper-hidden {
+.accordion-demo {
 	display: none;
+	overflow: hidden;
+	padding: 1em;
+	border-top: 1px solid #ddd;
 }
-.helper-left {
-	float: left;
-}
-.helper-clearfix:after { 
-	content: "."; 
-	display: block; 
-	height: 0; 
-	clear: both; 
-	visibility: hidden; 
-}
-.helper-clearfix { 
-	display: inline-block; 
-}
-/* required comment for clearfix to work in Opera \*/
-* html .helper-clearfix { 
-	height: 1%; 
-}
-.helper-clearfix { 
-	display: block; 
-}
-
-
-
 .ui-accordion .ui-accordion-content {
 	padding: 0;
 }
-.ui-accordion .ui-accordion-content div {
+.ui-accordion .ui-accordion-content p, .ui-accordion .ui-accordion-content ul {
 	margin: 1em;
+}
+.ui-accordion .ui-accordion-content ul {
+	margin-left: 3em;
 }
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
 	color: #333;
@@ -305,14 +288,6 @@ button.ui-state-active {
 	border-top: 1px solid #ddd;
 	border-left: 1px solid #ddd;
 }
-
-
-/*
- * jquery.ui.scrollbar.css
- *
- * notes: added !important declarations to support themeswitcher
- *
- */
 
 .ui-scrollbar-container {
 	overflow: hidden;
@@ -360,16 +335,32 @@ button.ui-state-active {
 .ui-scrollbar-state-hover {
 	background: #eee;
 }
-.ui-scrollbar-container .ui-iconi {
-
-}
-
 .ui-scrollbar-container .ui-scrollbar-content-container {
 	margin-right: 28px;
 	padding: .6em;
 	overflow: hidden;
 }
 
-.ui-scrollbar-container .ui-scrollbar-arrow-state-active {
-
+.helper-hidden {
+	display: none;
+}
+.helper-left {
+	float: left;
+}
+.helper-clearfix:after { 
+	content: "."; 
+	display: block; 
+	height: 0; 
+	clear: both; 
+	visibility: hidden; 
+}
+.helper-clearfix { 
+	display: inline-block; 
+}
+/* required comment for clearfix to work in Opera \*/
+* html .helper-clearfix { 
+	height: 1%; 
+}
+.helper-clearfix { 
+	display: block; 
 }

@@ -11,11 +11,25 @@
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="http://github.com/badsyntax/jquery-plugins/raw/master/listsortable/js/jquery.ui.listsortable.js"></script>
 	<script type="text/javascript" src="http://github.com/badsyntax/jquery-plugins/raw/master/tree/js/jquery.ui.tree.js"></script>
+	<style type="text/css">
+		body	{
+			margin: 0;
+		}
+	</style>
 </head>
 <body>
+        <script type="text/javascript">
+                var _gaq = _gaq || [];
+                _gaq.push(['_setAccount', 'UA-1636725-23']);
+                _gaq.push(['_trackPageview']);
+                (function() {
+                        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                })();
+        </script>
+	
 	<div>
-
-		<h2>Tree</h2>
 
 		<ul class="tree">
 			<li><a href="#">Item 1</a></li>
@@ -24,7 +38,6 @@
 				<ul class="ui-helper-hidden">
 					<li>
 						<a href="#">Item 1</a>
-						<ul></ul>
 					</li>
 					<li><a href="#">Item 2</a></li>
 					<li>
@@ -46,28 +59,13 @@
 		</ul>
 
 		<br />
-
-		<h2>Create / Destroy</h2>
 		
 		<button id="create">
-			Create tree
+			Create
 		</button>
 		<button id="destroy">
-			Destroy tree
+			Destroy
 		</button>
-
-		<h2>Public methods</h2>
-
-		<button id="selected">
-			Get selected
-		</button>
-		<button id="expand">
-			Expand all
-		</button>
-		<button id="collapse">
-			Collapse all
-		</button>
-		<div id="selected-info"></div>
 
 	</div>
 	
@@ -79,32 +77,10 @@
 				theme: 'default',
 				checkbox: false,
 				icons: true,
-				nodeDataURL: 'get-child-list.php'
+				sortable: false
 			});
 
 		}).trigger('click');
-
-		$('#selected').click(function(){
-			
-			var info = [];
-
-			$('.tree').tree('selected').each(function(){
-
-				info.push( $(this).text() );
-			});
-
-			$('#selected-info').html( info.join( '<br />' ) || 0 );
-		});
-
-		$('#expand').click(function(){
-
-			$('.tree').tree('expand');
-		});
-
-		$('#collapse').click(function(){
-			
-			$('.tree').tree('collapse');
-		});
 
 		$('#destroy').click(function(){
 

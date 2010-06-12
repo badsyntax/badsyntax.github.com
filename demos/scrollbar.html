@@ -12,19 +12,29 @@
 	<script type="text/javascript" src="http://github.com/badsyntax/jquery-plugins/raw/master/scrollbar/js/jquery.mousewheel.min.js"></script>
 	<script type="text/javascript" src="http://github.com/badsyntax/jquery-plugins/raw/master/scrollbar/js/jquery.ui.scrollbar.js"></script>
 	<style type="text/css">
+		body {
+			margin: 0;
+		}
 		#scrollbar {
-			width: 500px;
-			height: 300px;
+			width: 400px;
+			height: 200px;
 			margin-bottom: 2em;
 			overflow: hidden;
 		}
 	</style>
 </head>
 <body>
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-1636725-23']);
+		_gaq.push(['_trackPageview']);
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
 	<div>
-
-		<h2>Scroll bar</h2>
-
 		<div id="scrollbar" class="ui-widget-content ui-corner-all">
 
 			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ligula nisi, viverra eget sollicitudin in, commodo at velit. Nullam aliquet sem a neque faucibus venenatis non non turpis. Nunc non nisl nibh. Cras sed erat dapibus erat scelerisque accumsan at non felis. Donec eros diam, vulputate a commodo elementum, iaculis eget lorem. Integer ante velit, lobortis ut facilisis quis, laoreet in orci. Curabitur ultrices urna et ipsum pretium imperdiet. Fusce dictum arcu non turpis convallis sed molestie nulla posuere. Donec vel sapien sapien. Praesent malesuada dictum dui malesuada scelerisque. Quisque est ligula, varius vitae fringilla ut, commodo ac ligula</p>
@@ -33,16 +43,13 @@
 
 			<p>Etiam ac sapien diam, quis vestibulum orci. Nam eu diam et metus cursus viverra. Integer mollis porta condimentum. Maecenas gravida tincidunt quam, ut aliquet est cursus eget. Mauris fermentum porta lacus id lacinia. Nulla auctor hendrerit velit, vitae bibendum neque venenatis nec. Nam ultrices rhoncus ultrices. In non odio mi. Proin malesuada aliquam tristique. Sed sit amet sapien vitae risus vehicula mollis. Sed sed odio nec neque molestie aliquam ac sit amet ipsum. Mauris in luctus justo. Mauris dui erat, aliquam adipiscing vehicula ut, elementum sit amet nisl.</p>
 
-			<p>Etiam vel sem mi. Morbi fringilla ultrices aliquet. Aenean sem quam, lobortis vitae accumsan at, elementum nec tortor. Aliquam eros sem, bibendum sit amet commodo non, vulputate vel turpis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Maecenas nec augue vel purus congue commodo in et tellus. Curabitur non orci velit. Nullam et aliquet tortor. Phasellus varius ultricies lectus, vel convallis ligula porttitor vel. Proin et quam arcu. Morbi enim mi, mollis auctor fringilla quis, semper eget erat.</p>
-
-			<p>Vivamus commodo adipiscing velit, eget pulvinar sem euismod a. Pellentesque consectetur ultricies egestas. Suspendisse non nunc urna. In velit enim, laoreet sed eleifend nec, pharetra eu risus. Etiam neque magna, condimentum id pretium nec, pellentesque non enim. Duis dolor mi, vehicula non ultrices in, vehicula non neque. Suspendisse bibendum tellus in neque commodo tristique. Praesent lacus sem, porttitor at interdum in, dapibus sit amet elit. Ut mollis sapien at urna fringilla commodo. Nulla facilisi. Duis posuere, odio dictum adipiscing pretium, lectus libero accumsan erat, at porttitor eros orci eu tellus. Fusce tincidunt congue augue, at pharetra ipsum sagittis sit amet. Nullam vitae turpis metus, quis bibendum massa. Donec molestie, nunc non pellentesque egestas, libero nulla porttitor nisi, ut semper nibh tellus vel sem. Vestibulum consectetur odio sit amet elit blandit tincidunt. Ut semper accumsan dignissim. Fusce quis nisl diam. Suspendisse dapibus erat a augue ultricies mattis. Suspendisse neque augue, egestas eget suscipit ac, pulvinar quis nibh.</p>
 		</div>
 
-		<button id="destroy">
-			Destroy scrollbar
-		</button>
 		<button id="create">
-			Create scrollbar
+			Create
+		</button>
+		<button id="destroy">
+			Destroy
 		</button>
 
 		<script type="text/javascript" src="/js/themeswitchertool.js"></script>
@@ -62,8 +69,6 @@
 
 			$('#scrollbar').scrollbar('destroy');
 		});
-
-		$('#theme-switcher').themeswitcher();
 	</script>
 </body>
 </html>
