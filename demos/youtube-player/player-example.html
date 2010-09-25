@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+	<title>jQuery Youtube Player Example</title>
+	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+	<link type="text/css" rel="stylesheet" media="screen, projection" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/black-tie/jquery-ui.css" />
+	<link type="text/css" rel="stylesheet" media="screen, projection" href="css/player.css" />
+	<style type="text/css">
+		body {
+			font: normal 90% Arial;
+			margin: 2em;
+		}
+	</style>
+</head>
+<body>
+	<div id="player">
+		<div id="player-video">
+			<div id="player-object">
+				You need Flash player 8+ and JavaScript enabled.
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+	<script type="text/javascript" src="js/jquery.mousewheel.min.js"></script>
+	<script type="text/javascript" src="js/player.js"></script>
+	<script type="text/javascript" src="js/playlist.js"></script>
+	<script type="text/javascript">
+
+		var config =  {
+			playlist: {
+				title: 'Random videos',
+				videos: [
+					{ id: 'wDowSzVgjXI', title: 'The All Seeing I - Beat Goes On HQ' },
+					{ id: '1gD8nV8RlPU', title: 'Dai Mahou Touge - Vegetable Suicide' },
+					{ id: 'hPzNl6NKAG0', title: 'Maru the cat' },
+					{ id: 'JKQ83Bo9g3s', title: 'Lilou vs. Hong 10 - Red Bull BC One 2005' },
+					{ id: 'lvpuT3aoypE', title: 'All Online Data Lost After Internet Crash' },
+					{ id: 'Kv6Ewqx3PMs', title: 'Mr. Oizo Flat Beat' },
+					{ id: '4M0dhmVADg0', title: 'Fast Supra' },
+					{ id: 'dRUS5VfkJls', title: 'FRED THE RAVER' },
+					{ id: 'IAxj2ob_JoU', title: 'Most incredible volcano footage ever' },
+					{ id: '3ycBGkLkEkg', title: 'Wingsuit BASE jumping in Baffin Island' }
+				]
+			}
+		};
+
+		$("#player").player(config)
+	</script>
+</body>
+</html>
