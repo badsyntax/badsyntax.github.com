@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+	<meta charset="utf-8" />
+	<title>jQuery UI Sortable</title>
+	<!--[if IE]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<style type="text/css">
+		body {
+			margin: 3em;
+		}
+		#content {
+			width: 600px;
+			height: 300px;
+		}
+	</style>
+</head>
+<body>
+	
+	<div id="container">
+
+		<form>
+
+			<textarea id="content" wrap="off">
+h1 { font-size: 21pt; }
+h2 { font-size: 16pt; }
+h2.standFirst { font-size: 12pt; font-weight: bold; float: none; }
+h3, h4, h5, h6 { font-size: 13pt; }
+
+#brandlogo img { position: absolute; top: 0; right: 0; }
+
+/*
+test
+*/
+
+#logo { display: block; float: left; }
+h1.pageTitle { display: block; margin-top: 120px; float: right; width: 100%; } 
+#logo img { position: absolute; top: 0; left: 0; }
+
+#newscentremidleft, #newscentremidright { float: none; }
+.quotebox p#quotes { display: block; position: absolute; width: 50%; clear: both; top: 0; right: 0; color: #cccccc; font-style: italic; }
+.quotebox p#quotes:before, .quotebox p#quotes:after { content:"\""; }
+
+</textarea>
+
+			<br />
+
+			<button type="button" id="clean">
+				Clean
+			</button>
+			<button type="reset">
+				Reset
+			</button>
+
+		</form>
+ 	<script type="text/javascript">
+
+
+(function(window, document, undefined){
+	
+	// !incomplete
+
+	function cssClean( content) {
+		
+		var comments = [];
+		
+		function hideComments(content){
+			
+			var c = -1;
+			
+			return content
+				.replace(/(\/\/.*?)\n/g, '__c$1__')			// replace '// comment' with placeholder
+				.replace(/\n/g,'\uffff')				// replace new lines chars so we can match over multi lines
+				.replace(/(\/\*.*?\*\/)/g, '__c$1__')			// replace '/* comment */' with placeholder
+				.replace(/__c(.*?)__/g, function(x, y){			// find placeholder comment and store comment content
+
+					comments[++c] = y;
+
+					return '__c' + c + '__';
+				})
+				.replace(/\uffff/g,'\n')				// replace newline placeholder with actual newline char
+			;
+		}
+		
+		function restoreComments(content){
+			
+			return content
+				.replace(/__c([0-9]+)__/g, function(x, y){		// replace placeholder comments with comment content
+					
+					return comments[y];
+				})
+				.replace(/\uffff/g,'\n')				// replace new line place holder with new line char
+				.replace(/\{\s+\/\*/g, '{/*')				// remove white space between comment blocks in style rules
+				.replace(/\/\s+\}/g, '/}')				// remove white space between comment blocks in style rules
+				.replace(/\*\/\s+([^\s\{])/g, '*/\n\n$1')		// add double row line between style rules and comment blocks
+				.replace(/\}\s+\/\*/g, '}\n\n/*')			// add double new line between style rules and comment blocks
+				.replace(/\*\/\n+\/\*/g, '\*\/\n\n\/\*')		// remove double line break between /* comment */ blocks
+			;
+		}
+			
+		function cleanWhitespace(content){
+			
+			return content
+				.replace(/\s/g, ' ')			// convert all whitespace to normal space char
+				.replace(/ +/g, ' ')			// convert multiple consecutive space chars to one space char
+				.replace(/([:;]) /g, '$1')		// remove space after semi-colons
+				.replace(/ ([:;])/g, '$1')		// remove space before semi-colons
+				.replace(/\s+([\{\}])/g, '$1')		// remove space before braces
+				.replace(/([\{\}])\s+/g, '$1')		// remove space after braces
+				.replace(/\}/g, '}\n')			// add newline after brace	
+				.replace(/([^\s\/\{;])\}/g, '$1;}')	// add semicolon before brace
+				.replace(/([#\.]) +/g, '$1')		// remove whitespace between id or class selector char
+
+			;
+		}
+
+		function alphabetizeRules(content){
+
+			var lines = content.split(/\n/);
+
+			for(var i = 0; i < lines.length;i++){
+
+				lines[i] = lines[i].replace(/^(.*?)\{(.*?)\}/, function(x, y, z){
+
+					var rules = z.split(';');
+
+					rules.sort();
+
+					rules.push( rules.shift() );
+
+					return y + '{' + rules.join(';') + '}';
+				});
+			}
+
+			return lines.join('\n');
+		}
+
+		function cleanup(content){
+
+			return content
+				.replace(/^ /, '')		// remove whitespace at beginning
+				.replace(/\}\s+$/, '}')		// remove whitespace at end
+		}
+
+		
+		content = hideComments(content);
+		
+		content = cleanWhitespace(content);
+			
+		content = alphabetizeRules(content);
+		
+		content = restoreComments(content);
+
+		content = cleanup(content);
+		
+		return content;
+	}
+
+	document.getElementById('clean').onclick = function(){
+
+		var content = document.getElementById('content').value;
+
+		content = cssClean( content );
+				
+		document.getElementById('content').value = content;		
+	};
+
+})(window, document);
+		
+</script>
+</body>
+</html>
