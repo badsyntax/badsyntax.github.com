@@ -1,46 +1,56 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta charset="utf-8" />
-	<title>CSS Clean</title>
-	<!--[if IE]>
-		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
-	<style type="text/css">
-		body {
-			margin: 3em;
-		}
-		#content {
-			width: 600px;
-			height: 300px;
-		}
-	</style>
+<title>CSSClean</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!--[if IE]>
+	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<style type="text/css">
+	body {
+		margin: 3em;
+		font-family: arial;
+		font-size:76%;
+	}
+	#content {
+		width: 600px;
+		height: 300px;
+	}
+	.strike {
+		text-decoration: line-through;
+	}
+</style>
 </head>
 <body>
 	
 	<div id="container">
-
+	
+		<p>Todo</p>
+		<ul>
+			<li class="strike">Sort the order of style rules</li>
+			<li>'Inline' comment blocks should be assumed to follow (apply to previous). The order must be kept with sorting rules.</li> 
+			<li>Sort the order of shorthand rules (eg background)</li>
+			<li class="strike">Upper/lowercase hashes</li>
+			<li class="strike">Convert hashes to short version (eg #FFFFFF to #FFF)</li>
+			<li class="strike">Make declaration properties lowercase</li>
+			<li>Make declaration values lowercase</li>
+			<li>Add formatting options</li>
+		</ul>
+		<br />
 		<form>
 
 			<textarea id="content" wrap="off">
-				h1 { font-size: 21pt; }
-				h2 { font-size: 16pt; }
-				h2.standFirst { font-size: 12pt; font-weight: bold; float: none; }
-				h3, h4, h5, h6 { font-size: 13pt; }
+@charset "utf-8";
+body{font-size:76%;/*+-12px*/ margin:0;padding:0;color:#000;background-color:#FFF;text-align:center;}
 
-				#brandlogo img { position: absolute; top: 0; right: 0; }
 
-				/*
-				test
-				*/
-
-				#logo { display: block; float: left; }
-				h1.pageTitle { display: block; margin-top: 120px; float: right; width: 100%; } 
-				#logo img { position: absolute; top: 0; left: 0; }
-
-				#newscentremidleft, #newscentremidright { float: none; }
-				.quotebox p#quotes { display: block; position: absolute; width: 50%; clear: both; top: 0; right: 0; color: #cccccc; font-style: italic; }
-				.quotebox p#quotes:before, .quotebox p#quotes:after { content:"\""; }
+/* LAYOUT */
+.page{background-color:#fff;margin:0 auto;padding:0 5px 16px 5px;text-align:left;}
+.container{}
+.header{background-color:#336699;color:#FFF;clear:both;margin:0 0 2px 0;font-size:2em;padding:1em 10px 10px 10px;}
+.footer{clear:both;margin:2px 0 0 0;}
+.content{background-color:transparent;}
+.content-container{position:relative;}
 			</textarea>
 
 			<br />
@@ -51,6 +61,8 @@
 			<button type="reset">
 				Reset
 			</button>
+			
+			<div id="time"></div>
 
 		</form>
 
@@ -61,8 +73,6 @@
 
 		(function(window, document, undefined){
 			
-			// !incomplete
-
 			function cssClean( content) {
 				
 				var comments = [];
@@ -72,52 +82,52 @@
 					var c = -1;
 					
 					return content
-						.replace(/(\/\/.*?)\n/g, '__c$1__')			// replace '// comment' with placeholder
-						.replace(/\n/g,'\uffff')				// replace new lines chars so we can match over multi lines
-						.replace(/(\/\*.*?\*\/)/g, '__c$1__')			// replace '/* comment */' with placeholder
-						.replace(/__c(.*?)__/g, function(x, y){			// find placeholder comment and store comment content
+						.replace(/(\/\/.*?)\n/g, '__c$1__')				// replace '// comment' with placeholder
+						.replace(/\n/g,'\uffff')					// replace new lines chars so we can match over multi lines statements
+						.replace(/(\uffff*\/\*.*?\*\/\uffff*)/g, '__c$1__')		// replace '/* comment */' with placeholder
+						.replace(/__c(.*?)__/g, function(x, y){				// find placeholder comment and store comment content
 
 							comments[++c] = y;
 
 							return '__c' + c + '__';
 						})
-						.replace(/\uffff/g,'\n')				// replace newline placeholder with actual newline char
+						.replace(/\uffff/g,'\n')					// replace newline placeholder with actual newline char
 					;
 				}
 				
 				function restoreComments(content){
 					
 					return content
-						.replace(/__c([0-9]+)__/g, function(x, y){		// replace placeholder comments with comment content
+						.replace(/__c([0-9]+)__/g, function(x, y){			// replace placeholder comments with comment content
 							
-							return comments[y];
+							return comments[y]
+								.replace(/\uffff/g,'\n')  			// replace new line place holder with new line char
+							;
 						})
-						.replace(/\uffff/g,'\n')				// replace new line place holder with new line char
-						.replace(/\{\s+\/\*/g, '{/*')				// remove white space between comment blocks in style rules
-						.replace(/\/\s+\}/g, '/}')				// remove white space between comment blocks in style rules
-						.replace(/\*\/\s+([^\s\{])/g, '*/\n\n$1')		// add double row line between style rules and comment blocks
-						.replace(/\}\s+\/\*/g, '}\n\n/*')			// add double new line between style rules and comment blocks
-						.replace(/\*\/\n+\/\*/g, '\*\/\n\n\/\*')		// remove double line break between /* comment */ blocks
+						.replace(/\{\s+\/\*/g, '{/*')					// remove white space between comment blocks in statements
+						.replace(/\}\s+\/\*/g, '}\n\n/*')				// add double new line between statements and comment blocks
+						.replace(/\*\/\n{3,}/g, '*/\n\n')				// convert tripple or more line breaks after comment blocks to double line break
+						
+						//.replace(/\/\s+\}/g, '/}')					// remove white space between comment blocks in statements
+						//.replace(/\*\/\s+([^\s\{])/g, '*/\n\n$1')			// add double row line between statements and comment blocks
 					;
 				}
 					
-				function cleanWhitespace(content){
+				function adjustWhitespace(content){
 					
 					return content
-						.replace(/\s/g, ' ')			// convert all whitespace to normal space char
-						.replace(/ +/g, ' ')			// convert multiple consecutive space chars to one space char
-						.replace(/([:;]) /g, '$1')		// remove space after semi-colons
-						.replace(/ ([:;])/g, '$1')		// remove space before semi-colons
-						.replace(/\s+([\{\}])/g, '$1')		// remove space before braces
-						.replace(/([\{\}])\s+/g, '$1')		// remove space after braces
-						.replace(/\}/g, '}\n')			// add newline after brace	
-						.replace(/([^\s\/\{;])\}/g, '$1;}')	// add semicolon before brace
-						.replace(/([#\.]) +/g, '$1')		// remove whitespace between id or class selector char
-
+						.replace(/\s/g, ' ')					// convert all whitespace to normal space char
+						.replace(/ +/g, ' ')					// convert multiple consecutive space chars to one space char
+						.replace(/^(@charset.*?;)\s/i, '$1\n')			// add a newline to the end of the character set rule (if any)
+						.replace(/\s+([\{\}])/g, '$1')				// remove space before braces
+						.replace(/([\{\}])\s+/g, '$1')				// remove space after braces
+						.replace(/\}/g, '}\n')					// add newline after brace	
+						.replace(/([^\s\/\{;])\}/g, '$1;}')			// add semicolon before brace
+						.replace(/([#\.]) +/g, '$1')				// remove whitespace between id or class identifiers
 					;
 				}
 
-				function alphabetizeRules(content){
+				function adjustRules(content){
 
 					var lines = content.split(/\n/);
 
@@ -125,35 +135,88 @@
 
 						lines[i] = lines[i].replace(/^(.*?)\{(.*?)\}/, function(x, y, z){
 
-							var rules = z.split(';');
-
+							
+							var rules = z
+								.replace(/^\s+|\s+$/, '')					// remove whitespace from beginning and end
+								.replace(/;\s*;/g, ';')						// remove double semi-colons
+								.replace(/;+/g, ';')						// remove double or more semi-colons
+								.replace(/^;/, '')							// remove semi-colon at beginning
+								.replace(/;\s*(__c[0-9]+__)\s*;/, ';$1')			// dodgy semi-colons (one before and one after inline comment block
+								.replace(/;(__c[0-9]+__)/g, '$1;')				// adjust order of inline comments
+								.replace(/([:;])\s+/g, '$1')					// remove space after semi-colons
+								.replace(/ ([:;])/g, '$1')					// remove space before semi-colons
+								.split(';')
+							;
+							
+							// convert declarations (property names) to lowercase, see http://www.w3.org/TR/CSS21/syndata.html#characters
+				
+							var i = rules.length;
+							while(i--){
+								
+								if (rules[i]){
+								
+									var declaration = rules[i].split(':');
+									
+									rules[i] = 
+										declaration[0].toLowerCase() + ':' + 
+										declaration[1]
+										// convert property values to lowercase. careful!
+										// extend to everthing that is not within Parentheses ("( )"), brackets ("[ ]"), braces ("{ }"), single quotes ('), or double quotes (")
+										.replace(/([0-9]+)([PXEM]{1,2})/g, function(x, y, z){
+											
+											return y + z.toLowerCase();
+										});
+								}
+							}
+							
 							rules.sort();
 
 							rules.push( rules.shift() );
+							
+							var ruleStr = rules
+								.join(';')
+								.replace(/(__c[0-9]+__);/g, ';$1')		// adjust order of inline comments
+								.replace(/^\s+|\s+$/, '')			// remove whitespace from beginning and end
+							;
 
-							return y + '{' + rules.join(';') + '}';
+							return y + '{' + ruleStr + '}';
 						});
 					}
 
 					return lines.join('\n');
 				}
+				
+				function adjustHashes(content){
+					
+					return content
+						.replace(/#([a-fA-F0-9]+)/g, function(x, hash){	
+							
+							hash = hash.toUpperCase();	// convert hash to upper case
+							
+							// convert tripple pair digits to shorthand
+							hash = hash.replace( 
+								new RegExp(hash[0] + '{2,2}' + hash[2] + '{2,2}' + hash[4] + '{2,2}'), 
+								hash[0] + hash[2] + hash[4] 
+							);		
+							
+							return '#' + hash;
+						})
+					;	
+				}
 
 				function cleanup(content){
 
 					return content
-						.replace(/^ /, '')		// remove whitespace at beginning
-						.replace(/\}\s+$/, '}')		// remove whitespace at end
+						.replace(/^\s+/, '')		// remove whitespace at beginning
+						.replace(/\s+$/, '')		// remove whitespace at end
 				}
 
-				
+				content = cleanup(content);				
 				content = hideComments(content);
-				
-				content = cleanWhitespace(content);
-					
-				content = alphabetizeRules(content);
-				
+				content = adjustWhitespace(content);
+				content = adjustRules(content);
+				content = adjustHashes(content);
 				content = restoreComments(content);
-
 				content = cleanup(content);
 				
 				return content;
@@ -162,10 +225,16 @@
 			document.getElementById('clean').onclick = function(){
 
 				var content = document.getElementById('content').value;
+				
+				var start = (new Date).getTime();
 
 				content = cssClean( content );
-						
+				
+				var diff = (new Date).getTime() - start;
+
 				document.getElementById('content').value = content;		
+				
+				document.getElementById('time').innerHTML = diff.toString() + 'ms';
 			};
 
 		})(window, document);
