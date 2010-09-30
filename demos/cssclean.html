@@ -41,7 +41,7 @@
 
 			<textarea id="content" wrap="off">
 @charset "utf-8";
-body{font-size:76%;/*+-12px*/ margin:0;padding:0;color:#000;background-color:#FFF;text-align:center;}
+body{font-size:76%;/*+-12px*/ margin:0;padding:0;color:#000;background: transparent url(image.gif) no-repeat 0 0;text-align:center;}
 
 
 /* LAYOUT */
@@ -68,7 +68,7 @@ body{font-size:76%;/*+-12px*/ margin:0;padding:0;color:#000;background-color:#FF
 
 	</div>
 
- 	<script type="text/javascript">
+	<script type="text/javascript">
 
 
 		(function(window, document, undefined){
@@ -82,8 +82,8 @@ body{font-size:76%;/*+-12px*/ margin:0;padding:0;color:#000;background-color:#FF
 					var c = -1;
 					
 					return content
-						.replace(/(\/\/.*?)\n/g, '__c$1__')				// replace '// comment' with placeholder
-						.replace(/\n/g,'\uffff')					// replace new lines chars so we can match over multi lines statements
+						.replace(/(\/\/.*?)\n/g, '__c$1__')						// replace '// comment' with placeholder
+						.replace(/\n/g,'\uffff')								// replace new lines chars so we can match over multi lines statements
 						.replace(/(\uffff*\/\*.*?\*\/\uffff*)/g, '__c$1__')		// replace '/* comment */' with placeholder
 						.replace(/__c(.*?)__/g, function(x, y){				// find placeholder comment and store comment content
 
@@ -91,17 +91,17 @@ body{font-size:76%;/*+-12px*/ margin:0;padding:0;color:#000;background-color:#FF
 
 							return '__c' + c + '__';
 						})
-						.replace(/\uffff/g,'\n')					// replace newline placeholder with actual newline char
+						.replace(/\uffff/g,'\n')				// replace newline placeholder with actual newline char
 					;
 				}
 				
 				function restoreComments(content){
 					
 					return content
-						.replace(/__c([0-9]+)__/g, function(x, y){			// replace placeholder comments with comment content
+						.replace(/__c([0-9]+)__/g, function(x, y){		// replace placeholder comments with comment content
 							
 							return comments[y]
-								.replace(/\uffff/g,'\n')  			// replace new line place holder with new line char
+								.replace(/\uffff/g,'\n')				// replace new line place holder with new line char
 							;
 						})
 						.replace(/\{\s+\/\*/g, '{/*')					// remove white space between comment blocks in statements
@@ -109,7 +109,7 @@ body{font-size:76%;/*+-12px*/ margin:0;padding:0;color:#000;background-color:#FF
 						.replace(/\*\/\n{3,}/g, '*/\n\n')				// convert tripple or more line breaks after comment blocks to double line break
 						
 						//.replace(/\/\s+\}/g, '/}')					// remove white space between comment blocks in statements
-						//.replace(/\*\/\s+([^\s\{])/g, '*/\n\n$1')			// add double row line between statements and comment blocks
+						//.replace(/\*\/\s+([^\s\{])/g, '*/\n\n$1')		// add double row line between statements and comment blocks
 					;
 				}
 					
@@ -118,13 +118,79 @@ body{font-size:76%;/*+-12px*/ margin:0;padding:0;color:#000;background-color:#FF
 					return content
 						.replace(/\s/g, ' ')					// convert all whitespace to normal space char
 						.replace(/ +/g, ' ')					// convert multiple consecutive space chars to one space char
-						.replace(/^(@charset.*?;)\s/i, '$1\n')			// add a newline to the end of the character set rule (if any)
-						.replace(/\s+([\{\}])/g, '$1')				// remove space before braces
-						.replace(/([\{\}])\s+/g, '$1')				// remove space after braces
+						.replace(/^(@charset.*?;)\s/i, '$1\n')	// add a newline to the end of the character set rule (if any)
+						.replace(/\s+([\{\}])/g, '$1')			// remove space before braces
+						.replace(/([\{\}])\s+/g, '$1')			// remove space after braces
 						.replace(/\}/g, '}\n')					// add newline after brace	
-						.replace(/([^\s\/\{;])\}/g, '$1;}')			// add semicolon before brace
-						.replace(/([#\.]) +/g, '$1')				// remove whitespace between id or class identifiers
+						.replace(/([^\s\/\{;])\}/g, '$1;}')		// add semicolon before brace
+						.replace(/([#\.]) +/g, '$1')			// remove whitespace between id or class identifiers
 					;
+				}
+				
+				function adjustPropValueOrder(property, value){
+					
+					var units = [											// http://www.w3schools.com/css/css_units.asp
+						'%',
+						'in',
+						'cm',
+						'mm',
+						'em',
+						'ex',
+						'pt',
+						'pc',
+						'px'
+					],
+					colors = [												// http://www.w3schools.com/css/css_units.asp
+						/[a-zA-Z\-]/,										// color name
+						/rgb\([0-9]+\s*,\s*[0-9]+\s*,\s*[0-9]+\)/,			// rgb(x,x,x)
+						/rgb\([0-9]+%\s*,\s*[0-9]+%\s*,\s*[0-9]+%\)/,		// rgb(x%,x%,x%)
+						/#[a-fA-F0-9]/										// #ff0000
+					];
+				
+					// see http://www.dustindiaz.com/css-shorthand/
+					var shortHands = {
+						'background': {
+							'color': [
+								/transparent/,
+								/#[a-fA-F09]{6,6}/
+							],
+							'image': [								// http://www.w3schools.com/css/pr_background-image.asp
+								/url\(['"]?.*?['"]?\)/,
+								/none/,
+								/inherit/
+							], 
+							'repeat': [								// http://www.w3schools.com/css/pr_background-repeat.asp
+								/repeat/,
+								/repeat-x/,
+								/repeat-y/,
+								/no-repeat/,
+								/inherit/
+							], 
+							'position': [
+								/-?[0-9]+[(\s-?[0-9]+/
+							], 
+							'attachment': []					// http://www.w3schools.com/css/pr_background-position.asp
+						},
+						'font': [ 
+							'style', 'variant', 'weight', 'size', 'line-height', 'family'
+						],
+						'border': [ 
+							'width', 'style', 'color' 
+						],
+						'outline': [ 
+							'width', 'style', 'color' 
+						],
+						'list-style':[ 
+							'type', 'position', 'image'
+						]
+					};
+					
+					if ( property in shortHands ) {
+					
+						//console.debug(property);	
+					}
+					
+					return value;
 				}
 
 				function adjustRules(content){
@@ -141,31 +207,31 @@ body{font-size:76%;/*+-12px*/ margin:0;padding:0;color:#000;background-color:#FF
 								.replace(/;\s*;/g, ';')						// remove double semi-colons
 								.replace(/;+/g, ';')						// remove double or more semi-colons
 								.replace(/^;/, '')							// remove semi-colon at beginning
-								.replace(/;\s*(__c[0-9]+__)\s*;/, ';$1')			// dodgy semi-colons (one before and one after inline comment block
-								.replace(/;(__c[0-9]+__)/g, '$1;')				// adjust order of inline comments
-								.replace(/([:;])\s+/g, '$1')					// remove space after semi-colons
+								.replace(/;\s*(__c[0-9]+__)\s*;/, ';$1')	// dodgy semi-colons (one before and one after inline comment block
+								.replace(/;(__c[0-9]+__)/g, '$1;')			// adjust order of inline comments
+								.replace(/([:;])\s+/g, '$1')				// remove space after semi-colons
 								.replace(/ ([:;])/g, '$1')					// remove space before semi-colons
 								.split(';')
 							;
 							
-							// convert declarations (property names) to lowercase, see http://www.w3.org/TR/CSS21/syndata.html#characters
-				
 							var i = rules.length;
 							while(i--){
 								
 								if (rules[i]){
 								
-									var declaration = rules[i].split(':');
-									
-									rules[i] = 
-										declaration[0].toLowerCase() + ':' + 
-										declaration[1]
+									var 
+										declaration = rules[i].split(':'),
+										prop = declaration[0].toLowerCase(),	// convert declarations (property names) to lowercase, see http://www.w3.org/TR/CSS21/syndata.html#characters
 										// convert property values to lowercase. careful!
 										// extend to everthing that is not within Parentheses ("( )"), brackets ("[ ]"), braces ("{ }"), single quotes ('), or double quotes (")
-										.replace(/([0-9]+)([PXEM]{1,2})/g, function(x, y, z){
+										val = declaration[1].replace(/([0-9]+)([PXEM]{2,2})/ig, function(x, y, z){
 											
 											return y + z.toLowerCase();
 										});
+									
+									rules[i] = 
+										prop + ':' +
+										adjustPropValueOrder( prop, val );
 								}
 							}
 							
@@ -175,7 +241,7 @@ body{font-size:76%;/*+-12px*/ margin:0;padding:0;color:#000;background-color:#FF
 							
 							var ruleStr = rules
 								.join(';')
-								.replace(/(__c[0-9]+__);/g, ';$1')		// adjust order of inline comments
+								.replace(/(__c[0-9]+__);/g, ';$1')	// adjust order of inline comments
 								.replace(/^\s+|\s+$/, '')			// remove whitespace from beginning and end
 							;
 
