@@ -34,10 +34,11 @@
 			<li class="strike">Convert hashes to short version (eg #FFFFFF to #FFF)</li>
 			<li class="strike">Make declaration properties lowercase</li>
 			<li>Make declaration values lowercase</li>
+			<li>Indent child statements</li>
 			<li>Add formatting options</li>
 		</ul>
 		<br />
-		<form>
+		<form name="cssclean">
 
 			<textarea id="content" wrap="off">
 @charset "utf-8";
@@ -50,7 +51,13 @@ body{font-size:76%;/*+-12px*/ margin:0;padding:0;color:#000;background: transpar
 .header{background-color:#336699;color:#FFF;clear:both;margin:0 0 2px 0;font-size:2em;padding:1em 10px 10px 10px;}
 .footer{clear:both;margin:2px 0 0 0;}
 .content{background-color:transparent;}
+.content .test{background:red;}
+.content .test .noways{background:black;}
+.content .test .black{background:black;}
+.content .black{background:red;}
 .content-container{position:relative;}
+.rental-details div div.title{float:left;font-weight:bold;width:28%;}
+.rental-details div div.title{color:#2B2B2B;font-size:1.15em;}
 			</textarea>
 
 			<br />
@@ -62,20 +69,39 @@ body{font-size:76%;/*+-12px*/ margin:0;padding:0;color:#000;background: transpar
 				Reset
 			</button>
 			
-			<div id="time"></div>
+			<span id="time"></span>
+			
+			<div id="options">
+				<h3>Options</h3>
+				<ul>
+					<li>
+						<label><input type="radio" name="hashes-case" val="upper" checked="checked" /> Hashes to uppercase</label>
+					</li>
+					<li>
+						<label><input type="radio" name="hashes-case" val="lower" /> Hashes to lowercase</label>
+					</li>
+					<li>
+						<label><input type="checkbox" name="hashes-shorthand" checked="checked" /> Hashes to shorthand</label>
+					</li>
+				</ul>
+			</div>				
 
 		</form>
 
 	</div>
 
-	<script type="text/javascript">
-
-
+ 	<script type="text/javascript">
+	
 		(function(window, document, undefined){
 			
-			function cssClean( content) {
+			function cssClean( content, options) {
 				
 				var comments = [];
+				
+				options = options || {
+					
+					// add default options here
+				};
 				
 				function hideComments(content){
 					
@@ -101,7 +127,7 @@ body{font-size:76%;/*+-12px*/ margin:0;padding:0;color:#000;background: transpar
 						.replace(/__c([0-9]+)__/g, function(x, y){		// replace placeholder comments with comment content
 							
 							return comments[y]
-								.replace(/\uffff/g,'\n')				// replace new line place holder with new line char
+								.replace(/\uffff/g,'\n')  				// replace new line place holder with new line char
 							;
 						})
 						.replace(/\{\s+\/\*/g, '{/*')					// remove white space between comment blocks in statements
@@ -166,10 +192,10 @@ body{font-size:76%;/*+-12px*/ margin:0;padding:0;color:#000;background: transpar
 								/no-repeat/,
 								/inherit/
 							], 
-							'position': [
-								/-?[0-9]+[(\s-?[0-9]+/
+							'position': [							// http://www.w3schools.com/css/pr_background-position.asp
+								/-?[0-9]+(\s*-?[0-9]+)?/
 							], 
-							'attachment': []					// http://www.w3schools.com/css/pr_background-position.asp
+							'attachment': []					
 						},
 						'font': [ 
 							'style', 'variant', 'weight', 'size', 'line-height', 'family'
@@ -200,12 +226,11 @@ body{font-size:76%;/*+-12px*/ margin:0;padding:0;color:#000;background: transpar
 					for(var i = 0; i < lines.length;i++){
 
 						lines[i] = lines[i].replace(/^(.*?)\{(.*?)\}/, function(x, y, z){
-
 							
 							var rules = z
 								.replace(/^\s+|\s+$/, '')					// remove whitespace from beginning and end
 								.replace(/;\s*;/g, ';')						// remove double semi-colons
-								.replace(/;+/g, ';')						// remove double or more semi-colons
+								.replace(/([:;])+/g, '$1')					// remove double or more semi-colons
 								.replace(/^;/, '')							// remove semi-colon at beginning
 								.replace(/;\s*(__c[0-9]+__)\s*;/, ';$1')	// dodgy semi-colons (one before and one after inline comment block
 								.replace(/;(__c[0-9]+__)/g, '$1;')			// adjust order of inline comments
@@ -221,13 +246,17 @@ body{font-size:76%;/*+-12px*/ margin:0;padding:0;color:#000;background: transpar
 								
 									var 
 										declaration = rules[i].split(':'),
-										prop = declaration[0].toLowerCase(),	// convert declarations (property names) to lowercase, see http://www.w3.org/TR/CSS21/syndata.html#characters
+										prop = declaration[0].toLowerCase(), 	// convert declarations (property names) to lowercase, see http://www.w3.org/TR/CSS21/syndata.html#characters
 										// convert property values to lowercase. careful!
 										// extend to everthing that is not within Parentheses ("( )"), brackets ("[ ]"), braces ("{ }"), single quotes ('), or double quotes (")
-										val = declaration[1].replace(/([0-9]+)([PXEM]{2,2})/ig, function(x, y, z){
+										val = 
+											declaration[1] ? 
+											declaration[1].replace(/([0-9]+)([PXEM]{2,2})/ig, function(x, y, z){
 											
-											return y + z.toLowerCase();
-										});
+												return y + z.toLowerCase();
+											}) :
+											// this shouldn't happen (double semi colon?) 
+											'';
 									
 									rules[i] = 
 										prop + ':' +
@@ -269,6 +298,49 @@ body{font-size:76%;/*+-12px*/ margin:0;padding:0;color:#000;background: transpar
 						})
 					;	
 				}
+				
+				function indentStatements(content){
+
+					var lines = content.split('\n'), 
+						prevSelector = {
+							segments: [],
+							tabbed: 0
+						}
+					;
+					
+					for(var i = 0; i< lines.length; i++){
+					
+						var 
+							line = lines[i],
+							selector = {
+								segments: line
+									.replace(/^(.*)\{.*$/, '$1')
+									.replace(/__c[0-9]+__/, '')		// remove comment blocks
+									.split(' '),
+								tabbed: 0
+							};
+						
+						if (selector.segments[0] == prevSelector.segments[0] && selector.segments.length >= prevSelector.segments.length) {
+						
+							for(var z = 0; z < selector.segments.length; z++) {
+							
+								if ( prevSelector.segments[z] && selector.segments[z] == prevSelector.segments[z] ) {
+									
+									if (selector.tabbed <= prevSelector.tabbed) {
+										
+										lines[i] = '\t' + lines[i];	
+										
+										selector.tabbed++;
+									}
+								}
+							}	
+						}
+						
+						prevSelector = selector;
+					}
+					
+					return lines.join('\n');					
+				}
 
 				function cleanup(content){
 
@@ -282,6 +354,7 @@ body{font-size:76%;/*+-12px*/ margin:0;padding:0;color:#000;background: transpar
 				content = adjustWhitespace(content);
 				content = adjustRules(content);
 				content = adjustHashes(content);
+				content = indentStatements(content);
 				content = restoreComments(content);
 				content = cleanup(content);
 				
@@ -289,18 +362,25 @@ body{font-size:76%;/*+-12px*/ margin:0;padding:0;color:#000;background: transpar
 			}
 
 			document.getElementById('clean').onclick = function(){
+				
+				var options = {};
 
 				var content = document.getElementById('content').value;
 				
 				var start = (new Date).getTime();
 
-				content = cssClean( content );
+				content = cssClean( content, options );
 				
 				var diff = (new Date).getTime() - start;
 
 				document.getElementById('content').value = content;		
 				
 				document.getElementById('time').innerHTML = diff.toString() + 'ms';
+			};
+			
+			document.forms['cssclean'].onreset = function(){
+			
+				document.getElementById('time').innerHTML = '';
 			};
 
 		})(window, document);
