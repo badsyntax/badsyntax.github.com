@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>CSS Buttons</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<style type="text/css">
+
+button {
+	background: #eee; /* for non-css3 browsers */
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ddd');
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ddd));
+	background: -moz-linear-gradient(top,  #fff,  #ddd);
+	border: 1px solid #aaa;
+	padding: .2em .5em;
+
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 12px;
+	border-radius: 6px;
+	-moz-box-shadow: #bbb 1px 2px 5px;
+	-webkit-box-shadow: #bbb 1px 2px 5px;
+	box-shadow: #bbb 1px 2px 5px;
+
+}
+
+
+</style>
+</head>
+
+<body>
+
+<h2>Intro</h2>
+<p>
+	The purpose of this test is to determine a reliable method of creating 'fancy' CSS buttons (without images).
+
+</p>
+<p>
+	<button type="button">
+		I am a button
+	</button>
+	<br /><br />
+	<button type="button">
+		Click me if you like
+	</button>
+</p>
+
+</body>
+
+</html>
+
