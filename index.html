@@ -103,15 +103,19 @@
 								.end()
 							.appendTo( $('#commits-scroll table') )
 					});
-		
+
 					$('#activity section').show();
-				
-					$('#loader').hide();
 
 					$('#repositories').render( this.data.userinfo );
 
 					$('#commits-scroll').scrollbar().find('tr:odd').addClass('odd');
+					
+					$('#activity section:not(#loader)').hide();
+					
+					$('#loader').fadeOut('slow', function(){
 
+						$('#activity section:not(#loader)').slideDown('slow');
+					});
 				});
 			});
 
