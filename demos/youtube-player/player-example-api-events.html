@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+	<title>jQuery Youtube Player API Example</title>
+	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+	<link type="text/css" rel="stylesheet" media="screen, projection" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/black-tie/jquery-ui.css" />
+	<link type="text/css" rel="stylesheet" media="screen, projection" href="css/youtube-player.css" />
+	<style type="text/css">
+		body { font: normal 90% Arial; background: #ddd; margin: 1em; }
+		#github-ribbon { position: absolute; top: 0; right: 0; border: 0; }
+		#theme-switcher { position: absolute; right: 1em; top: 1em; }
+		#centered{ width: 424px; margin: 2em auto 0 auto; }
+		h1 { font-size: 1.5em; }
+		img { border: 0;}
+		label { padding: .2em 0; display: block; position: relative; }
+		label input { position: absolute; left: 100px; top: 0; }
+	</style>
+</head>
+<body>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+	<script type="text/javascript" src="js/jquery.mousewheel.min.js"></script>
+	<script type="text/javascript" src="js/jquery.youtube.player.js"></script>
+
+	<div id="github-ribbon">
+		<a href="http://github.com/badsyntax/jquery-youtube-player">
+			<img src="http://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub" />
+		</a>
+	</div>
+
+	<div id="centered">
+		
+		<h1>jQuery Youtube Player</h1>
+
+		<div class="youtube-player">
+			<div class="youtube-player-video">
+				<div class="youtube-player-object">
+					You need Flash player 8+ and JavaScript enabled.
+				</div>
+			</div>
+		</div>
+
+		<br />
+
+		<h2>Options:</h2>
+
+		<form id="options" action="#">
+			<fieldset>
+				<label>
+					Show playlist
+					<input type="checkbox" name="showPlaylist" value="1" />
+				</label>
+				<label>
+					Update hash
+					<input type="checkbox" name="updateHash" value="1" />
+				</label>
+				<label>
+					Width
+					<input type="text" name="width" value="425" />
+				</label>
+				<label>
+					Height
+					<input type="text" name="height" value="356" />
+				</label>
+
+				<button type="button" id="reload-options">
+					Reload
+				</button>
+
+				<button type="reset">
+					Reset
+				</button>
+			</fieldset>
+		</form>
+		
+		<h2>Public methods:</h2>
+
+		<button type="button" id="load-video">
+			Load video
+		</button>
+
+		<button type="button" id="load-playlist">
+			Load playlist
+		</button>
+
+		<button type="button" id="destroy">
+			Destroy
+		</button>
+
+		<button type="button" id="create">
+			Create
+		</button>
+	
+		<h2>Events:</h2>
+
+		<div id="events" style="border:1px solid #aaa;padding:1em;"></div>
+	</div>
+
+	<script type="text/javascript">
+	//<![CDATA[
+
+		(function($){
+
+			function updateEvents(title){
+
+				$('<div>' + title + '</div>').hide().appendTo('#events').fadeIn();
+			}
+
+			var playerConfig =  {
+				showPlaylist: 0,
+				randomStart: 0,
+				playlist: {
+					title: 'Random videos',
+					videos: [
+						{ id: 'wDowSzVgjXI', title: 'The All Seeing I - Beat Goes On HQ' },
+						{ id: 'lvpuT3aoypE', title: 'All Online Data Lost After Internet Crash' }
+					]
+				},
+
+				// callback events
+
+				onReady: function(){
+
+					// 'this' is this playerobject
+					// console.debug(this);
+
+					updateEvents('player ready');
+				},
+
+				onVideoPlay: function(){
+
+					updateEvents('video play');
+				},
+
+				onError: function(){
+
+					updateEvents('error');
+				},
+
+				onBuffer: function(){
+
+					updateEvents('buffer');
+				}
+			};
+
+			var player = $('.youtube-player').player( playerConfig );
+			
+			$('#load-video').click(function(){
+
+				player.player('loadVideo', 'dilEgVu-6fw');
+
+			});
+
+			$('#load-playlist').click(function(){
+				
+				player.player('loadPlaylist', {
+					playlist: '71B8152559FA2805'
+				});
+			});
+			
+			$('#open-playlist').click(function(){
+				
+				player.player('openPlaylist');
+			});
+			
+			$('#close-playlist').click(function(){
+				
+				player.player('closePlaylist');
+			});
+			
+			$('#destroy').click(function(){
+				
+				player.player('destroy');
+			});
+			
+			$('#create').click(function(){
+				
+				player = $('.youtube-player').player( playerConfig );
+			});
+
+			$('#reload-options').click(function(){
+
+				var options = $('#options').serialize().split('&');
+
+				$.each(options, function(key, val){
+
+					var option = val.split('=');
+
+					playerConfig[ option[0] ] = Number(option[1]);
+				});
+
+				player.player('destroy');
+
+				$('.youtube-player').player( playerConfig );
+			});
+
+		})(window.jQuery);
+
+	//]]>
+	</script>
+</body>
+</html>
