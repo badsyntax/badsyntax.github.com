@@ -25,6 +25,7 @@
 			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 		})();
 	</script>
+
 </head>
 <body>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
@@ -71,6 +72,10 @@
 				<label>
 					Height
 					<input type="text" name="height" value="356" />
+				</label>
+				<label>
+					Toolbar
+					<input type="text" name="toolbar" value="play,pause,prev,next,shuffle,repeat,mute,playlistToggle" />
 				</label>
 
 				<button type="button" id="reload-options">
@@ -196,7 +201,7 @@
 
 					var option = val.split('=');
 
-					playerConfig[ option[0] ] = Number(option[1]);
+					playerConfig[ option[0] ] = (option[0] == 'toolbar') ? unescape(option[1]) : Number(option[1]);
 				});
 
 				player.player('destroy');
