@@ -6,8 +6,27 @@
 	background: #111;
 	margin: .1em 0 0 0;
 }
+.youtube-player-toolbar li.youtube-player-time {
+	float: right; 
+	font-weight: normal; 
+	font-size: 10px; 
+	line-height: 28px; 
+	margin: 0pt 5px 0pt 0pt;
+	padding: 0;
+	display: none;
+}
 .youtube-player-object {
 	border: 1px solid #282828;
+}
+.youtube-player-playlist .youtube-player-thumb {
+	float: left;
+	height: 90px;
+	width: 124px;
+	list-style: none;
+}
+.youtube-player-playlist .youtube-player-thumb img {
+	height: 90px;
+	width: 124px;
 }
 .youtube-player-toolbar li {
 	cursor: pointer;
@@ -47,6 +66,7 @@
 	list-style-type: decimal;
 	padding: 2px 4px 2px;
 	white-space: nowrap;
+	font-size: 13px;
 }
 .youtube-player-playlist-container {
 	border: 1px solid #282828;

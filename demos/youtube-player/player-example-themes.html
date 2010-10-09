@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-	<title>jQuery Youtube Player Example</title>
+	<title>jQuery Youtube Player Example - Themes</title>
 	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 	<link type="text/css" rel="stylesheet" media="all" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/black-tie/jquery-ui.css" />
 	<link type="text/css" rel="stylesheet" media="all" href="css/youtube-player.css" />
@@ -18,7 +18,7 @@
 		})();
 	</script>
 </head>
-<body class="basic">
+<body>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
 	<script type="text/javascript" src="js/jquery.mousewheel.min.js"></script>
@@ -44,6 +44,10 @@
 			</div>
 		</div>
 
+		<br />
+		<script type="text/javascript" src="http://jqueryui.com/themeroller/themeswitchertool/"></script>
+		<div id="switcher"></div>
+
 		<div id="footer">
 			<a href="player-example.html">Basic</a> |
 			<a href="player-example-api-events.html">Advanced</a> |
@@ -52,15 +56,22 @@
 			<a href="http://github.com/badsyntax/jquery-youtube-player/wiki/Installation-and-usage">Userguide</a> |
 			<a href="http://github.com/badsyntax/jquery-youtube-player/issues">Issues</a>
 		</div>
+
 	</div>
 
 	<script type="text/javascript">
 	//<![CDATA[
 
 		(function($){
+
 			var config =  {
 				showPlaylist: 0,
 				randomStart: 0,
+
+				onReady: function(){
+
+					$('#switcher').themeswitcher();
+				},
 
 				// Custom playlist
 				playlist: {
@@ -75,18 +86,6 @@
 						{ id: '3ycBGkLkEkg', title: 'Wingsuit BASE jumping in Baffin Island' }
 					]
 				}
-
-				/*
-				// Youtube playlist
-				playlist: {
-					playlist: '71B8152559FA2805'
-				}
-
-				// Latest user videos
-				playlist: {
-					user: 'TheSensless'
-				}
-				*/
 			};
 
 			$('.youtube-player').player(config)
