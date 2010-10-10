@@ -1,3 +1,6 @@
 [submodule "demos/youtube-player"]
 	path = demos/youtube-player
 	url = git://github.com/badsyntax/jquery-youtube-player.git
+[submodule "youtube-player"]
+	path = youtube-player
+	url = git://github.com/badsyntax/jquery-youtube-player.git

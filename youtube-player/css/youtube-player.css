@@ -1,0 +1,106 @@
+.youtube-player {
+	font-size: 86%;
+	position: relative;
+}
+.youtube-player-toolbar {
+	background: #111;
+	margin: .1em 0 0 0;
+}
+.youtube-player-toolbar li.youtube-player-time {
+	float: right; 
+	font-weight: normal; 
+	font-size: 10px; 
+	line-height: 28px; 
+	margin: 0pt 5px 0pt 0pt;
+	padding: 0;
+	display: none;
+	cursor: default;
+}
+.youtube-player-object {
+	border: 1px solid #282828;
+}
+.youtube-player-playlist .youtube-player-thumb {
+	float: left;
+	height: 90px;
+	width: 124px;
+	list-style: none;
+}
+.youtube-player-playlist .youtube-player-thumb img {
+	height: 90px;
+	width: 124px;
+}
+.youtube-player-toolbar li {
+	cursor: pointer;
+	float: left;
+	list-style: none outside none;
+	margin: 2px;
+	padding: 4px 0;
+	position: relative;
+}
+.youtube-player-toolbar li span.ui-icon {
+	float: left;
+	margin: 0 4px;
+}
+.youtube-player-infobar {
+	cursor: pointer;
+	float: left;
+	margin: 12px 12px 0px 12px;
+	position: absolute;
+	padding: 3px 6px;
+	top: 0px;
+	z-index: 99;
+}
+.youtube-player-playlist-scroller {
+	border: 0;
+	margin: 2px;
+	overflow: hidden;
+}
+.youtube-player-playlist {
+	list-style: decimal;
+	overflow-x: hidden;
+	padding: 0px 16px 0 0;
+}
+.youtube-player-playlist li {
+	border: 0;
+	cursor: pointer;
+	text-decoration: none;
+	list-style-type: decimal;
+	padding: 2px 4px 2px;
+	white-space: nowrap;
+	font-size: 13px;
+}
+.youtube-player-playlist-container {
+	border: 1px solid #282828;
+	display: none;
+	margin-top: .2em;
+	position: relative;
+}
+.youtube-player-playlist-scrollbar {
+	border: 0;
+	height: 100%;
+	right: 0;
+	position: absolute;
+	top: 0;
+	width: 20px;
+	z-index: 2;
+}
+.youtube-player-playlist-scrollbar-up {
+	cursor: pointer;
+	position: absolute;
+	right: 2px;
+	top: 5px;
+	z-index: 2;
+}
+.youtube-player-playlist-scrollbar-down {
+	position: absolute;
+	right: 2px;
+	bottom: 5px;
+	cursor: pointer;
+	z-index: 2;
+}
+.ui-state-default, .ui-widget-content .ui-state-default {
+	background-position: -9999px -9999px;
+}
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
+	background-position: 50% 50%;
+}
