@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-	<title>jQuery Youtube Player - Customm Toolbar Buttons</title>
+	<title>jQuery Youtube Player Example</title>
 	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 	<link type="text/css" rel="stylesheet" media="all" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/black-tie/jquery-ui.css" />
 	<link type="text/css" rel="stylesheet" media="all" href="css/youtube-player.css" />
@@ -42,59 +42,37 @@
 				</div>
 			</div>
 		</div>
+
+		<br />
+		<button type="button" id="get-state">
+			Get state
+		</button>
+
+		<div id="states"></div>
 	</div>
 
 	<script type="text/javascript">
 	//<![CDATA[
 
 		(function($){
+
 			var config =  {
 
-				toolbarButtons: { 
-				
-					// if you name a button used by the player, your button will be used,
-					// allowing you to override the default buttons
-
-					play: {
-						text: 'Play',
-						icon: 'ui-icon-play',
-						action: function(){
-
-							alert('This is a custom button action');
-
-							// 'this' is the player object
-							// console.debug(this) to get list of methods to use
-
-							this.playVideo();
-						}
-					},
-					
-					// custom buttons need to have a unique name, and remember to 
-					// add this name to the toolbar button list
-
-					customButton: {
-						text: 'Power',
-						icon: 'ui-icon-power',
-       	                 			action: function(){
-					
-							alert('Power off!');
-						}
-                    			}	
-				},
-
-				toolbar: 'play,playlistToggle,customButton',
-
-				// Custom playlist
 				playlist: {
 					title: 'Random videos',
-					videos: [
-						{ id: '1gD8nV8RlPU', title: 'Dai Mahou Touge - Vegetable Suicide' }
-					]
+					videos: [ { id: 'Kv6Ewqx3PMs', title: 'Mr. Oizo Flat Beat' } ]
 				}
-
 			};
 
-			$('.youtube-player').player(config);
+			var player = $('.youtube-player').player(config).player('plugin');
+			
+			
+			$('#get-state').click(function(){
+
+				var state = player.state();
+
+				$('<div />').html( state.join(',') ).hide().appendTo('#states').fadeIn();
+			});
 
 		})(window.jQuery);
 	//]]>

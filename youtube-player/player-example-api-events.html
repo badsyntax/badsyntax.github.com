@@ -7,16 +7,16 @@
 	<link type="text/css" rel="stylesheet" media="all" href="css/youtube-player.css" />
 	<link type="text/css" rel="stylesheet" media="all" href="css/example_files/example.css" />
 	<link type="text/css" rel="stylesheet" media="all" href="http://fonts.googleapis.com/css?family=Droid+Sans&amp;subset=latin" />
-        <script type="text/javascript">
-                var _gaq = _gaq || [];
-                _gaq.push(['_setAccount', 'UA-1636725-23']);
-                _gaq.push(['_trackPageview']);
-                (function() {
-                        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-                })();
-        </script>
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-1636725-23']);
+		_gaq.push(['_trackPageview']);
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
 </head>
 <body class="advanced">
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
@@ -90,7 +90,7 @@
 						</label>
 						<label>
 							Toolbar
-							<input type="text" name="toolbar" value="play,pause,prev,next,shuffle,repeat,mute,playlistToggle" />
+							<input type="text" name="toolbar" value="play,prev,next,shuffle,repeat,mute,playlistToggle" />
 						</label>
 
 						<button type="button" id="reload-options" class="github">
@@ -113,6 +113,14 @@
 
 					<button type="button" id="create">
 						Create
+					</button>
+					
+					<button type="button" id="next">
+						Next
+					</button>
+					
+					<button type="button" id="prev">
+						Prev
 					</button>
 				</div>
 
@@ -174,6 +182,11 @@
 				onVideoPlay: function(){
 
 					updateEvents('video play');
+				},
+				
+				onVideoPaused: function(){
+
+					updateEvents('video paused');
 				},
 
 				onError: function(msg){
@@ -246,6 +259,16 @@
 				player = $('.youtube-player').player( playerConfig );
 			});
 
+			$('#prev').click(function(){
+
+				player.player('prevVideo');
+			});
+
+			$('#next').click(function(){
+
+				player.player('nextVideo');
+			});
+			
 			$('#reload-options').click(function(){
 
 				$('#options input').each(function(){

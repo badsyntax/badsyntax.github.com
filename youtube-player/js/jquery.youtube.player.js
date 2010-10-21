@@ -10,17 +10,20 @@
 
 	$.fn.player = function(method){
 
-		var pluginName = 'jquery-youtube-player', args = arguments;
+		var pluginName = 'jquery-youtube-player', args = arguments, val = undefined;
 
-		return this.each(function(){
+		this.each(function(){
 
 			// get plugin reference
 			var obj = $.data( this, pluginName );
 
-			if ( obj && obj[method] ) {
+			if ( obj && obj[method]) {
 
-				// execute a public method
-				obj[method].apply( obj, Array.prototype.slice.call( args, 1 ) );
+				// execute a public method, store the return value
+				val = obj[method].apply( obj, Array.prototype.slice.call( args, 1 ) );
+
+				// only the 'plugin' public method is allowed to return a value
+				val = (method == 'plugin') ? val : undefined;
 			} 
 			else if ( !obj && ( typeof method === 'object' || ! method ) ) {
 
@@ -28,6 +31,9 @@
 				$.data( this, pluginName, new player(this, method, pluginName) );
 			}
 		});
+
+		// return the value from an API method or the jQuery object
+		return val || this;
 	}
 
 	function player(element, options, pluginName){
@@ -45,33 +51,46 @@
 			showTime: 1,			// show current time and duration in toolbar (boolean)
 			showTitleOverlay: 1,		// show video title overlay text (boolean)
 			videoThumbs: 0,			// show videos as thumbnails in the playlist area (boolean) (experimental)
-			randomStart: 1,			// show random video on plugin init (boolean)
+			randomStart: 0,			// show random video on plugin init (boolean)
 			autoStart: 0,			// auto start the video on init (boolean)
 			repeat: 0,			// repeat videos (boolean)
 			shuffle: 0,			// shuffle the play list (boolean)
 			updateHash: 0,			// update the location hash on video play (boolean)
+			highDef: 0,			// high definition quality or normal quality (boolean)
 			playlistHeight: 5,		// height of the playlist (integer) (N * playlist item height)
 			playlistBuilder: null,		// custom playlist builder function (null or function) see http://github.com/badsyntax/jquery-youtube-player/wiki/Installation-and-usage#fn9
 			playlistBuilderClickHandler: null, // custom playlist video click event handler, useful if you want to prevent default click event (null or function)
 			playlistSpeed: 550,		// speed of playlist show/hide animate
-			toolbarAppendTo: false,		// element to append the toolbar to (selector or false)
-			playlistAppendTo: false,	// element to append the playlist to (selector or false)
+			toolbarAppendTo: null,		// element to append the toolbar to (selector or null)
+			playlistAppendTo: null,		// element to append the playlist to (selector or null)
+			timeAppendTo: null,		// elemend to append to time to (selector or null)
 			videoParams: {			// video <object> params (object literal)
 				allowfullscreen: 'true',
-				allowScriptAccess: 'always'
+				allowScriptAccess: 'always',
+				wmode:	'transparent'
 			},
 			toolbarButtons: {},		// custom toolbar buttons
-			toolbar: 'play,prev,next,shuffle,repeat,mute,playlistToggle' // comma separated list of toolbar buttons
+			toolbar: 'play,prev,next,shuffle,repeat,mute,fullscreen,playlistToggle' // comma separated list of toolbar buttons
 		}, options);
 
 		this.element = $( element );
+		
+		this._states = {
+			'unstarted': -1,
+			'ended': 0,
+			'play': 1,
+			'paused': 2,
+			'buffering': 3,
+			'cued': 5,
+			'mute': 6
+		};
 
 		this._init();
 	}
 
 	player.prototype = {
 		
-		state: -1, timer: {}, router: {}, videoIds: [],
+		_activeStates: [], timer: {}, router: {}, videoIds: [],
 
 		_init : function(){
 
@@ -146,7 +165,7 @@
 			return id;
 		},
 
-		_trigger: function(scope, callback, arg){
+		_trigger : function(scope, callback, arg){
 
 			var type = typeof callback;
 
@@ -162,26 +181,47 @@
 			}
 		},
 		
+		// button data setter/getter
+		_buttonData : function(name, key, value){
+
+			if ( this.buttons[ name ] && this.buttons[ name ].element) {
+
+				return !value ? this.buttons[ name ].element.data( key ) : this.buttons[ name ].element.data( key, value );
+			}
+		},
+		
 		_bindYoutubeEventHandlers : function(){
 
 			var self = this;
-
+				
 			this.youtubePlayerEvents = {
 
 				ready : function(){
 
-					self.youtubePlayer = self.elements.player.find('object:first').get(0);
+					self.youtubePlayer = self.elements.playerVideo.find('object:first').get(0);
 
-					self.youtubePlayer.addEventListener('onStateChange', '_youtubeevents');
+					try {
 
-					self.youtubePlayer.addEventListener('onError', '_youtubeevents');
+						self.youtubePlayer.addEventListener('onStateChange', '_youtubeevents');
 
-					self.cueVideo();
+						self.youtubePlayer.addEventListener('onError', '_youtubeevents');
 
-					self.elements.toolbar.container.animate({opacity: 1}, 400, function(){
+					} catch(e) {
 
-						self._trigger(self, 'onReady', arguments);
-					});
+						self._triger(self, 'onError', [ e ] );
+					}
+
+					var startTime = self._buttonData('fullscreen', 'time') || 0;
+
+					self.loadVideo(false, true);
+
+					if (startTime && self._state('play')) self.playVideo(false, startTime);
+
+					self.elements.toolbar.container
+						.animate({opacity: 1}, 400, function(){
+
+							self._trigger(self, 'onReady', arguments);
+						});
 
 					self._showPlaylist();
 			
@@ -196,7 +236,7 @@
 
 					self.router.updateHash();
 
-					self.buttons.play.element.data('state', 1);
+					self._addState('play');
 
 					self.elements.toolbar.updateStates();
 
@@ -205,6 +245,10 @@
 					self._updateTime();
 
 					self._trigger(this, 'onVideoPlay', arguments);
+				},
+				videoPaused : function(){
+
+					self._trigger(this, 'onVideoPaused', arguments);
 				},
 				videoEnded : function(){
 
@@ -256,12 +300,11 @@
 			var self = this;
 
 			this.elements.playerVideo
-				.unbind('mouseenter.player mouseleave.player')
-				.bind('mouseenter.player', function(){ 
+				.one('mouseenter.player', function(){ 
 
 					self._updateInfo(); 
 				})
-				.bind('mouseleave.player', function(){
+				.one('mouseleave.player', function(){
 
 					self._hideInfo();
 				});
@@ -271,29 +314,78 @@
 
 		_youtubeEventHandler : function(state){
 
-			if (state != this.state) {
+			// reset the youtube player states every time an event is execute by the youtube player 
+			this._removeStates([ -1, 0, 1, 2, 3, 5, 100, 101, 150, 9 ]);
 
-				switch(this.state = state) {
-					case 0	: 
-						this.youtubePlayerEvents.videoEnded(); 
-						break;
-					case 1 : 
-						this.youtubePlayerEvents.videoPlay();
-						break;
-					case 3 : 
-						this.youtubePlayerEvents.videoBuffer(); 
-						break;
-					case 100: 
-					case 101:
-					case 150:
-						this.youtubePlayerEvents.error( state );
-						break;
-					case 9 : 
-						this.youtubePlayerEvents.ready();
-						break;
-				}
+			this._addState(state, true);
+
+			switch(state) {
+				case 0	: 
+					this.youtubePlayerEvents.videoEnded(); 
+					break;
+				case 1 : 
+					this.youtubePlayerEvents.videoPlay();
+					break;
+				case 2 :
+					this.youtubePlayerEvents.videoPaused();
+					break;
+				case 3 : 
+					this.youtubePlayerEvents.videoBuffer(); 
+					break;
+				case 100: 
+				case 101:
+				case 150:
+					this.youtubePlayerEvents.error( state );
+					break;
+				case 9 : 
+					this.youtubePlayerEvents.ready();
+					break;
+			}
+
+			this._trigger(this, 'onYoutubeStateChange', [ state ]);
+		},
+
+		_removeStates : function(states){
+
+			var newArray = [];
+			
+			$.each(this._activeStates, function(key, value){
+
+				($.inArray(value, states) === -1 && $.inArray(value, newArray) === -1) && newArray.push(value);
+			});
+
+			this._activeStates = newArray;
+		},
+		
+		_removeState : function(state){
+
+			this._removeStates([ this._states[ state ]  ]);
+
+			
+		},
+
+		_state : function(state, remove){
+
+			state = this._states[ state ];
+
+			return $.inArray(state, this._activeStates) !== -1 ? true : false;
+		},
+
+		_addState : function(state, stateID){
+
+			if (stateID) {
+			
+				$.inArray(state, this._activeStates) === -1 &&
+				this._activeStates.push( state );
+			
+			} else {
+
+				this._states[ state ] && 
+				$.inArray(this._states[ state ], this._activeStates) === -1 &&
+				this._activeStates.push( this._states[ state ] );
 			}
 		},
+
 		
 		_getPlaylistData : function(success, error){
 
@@ -421,26 +513,39 @@
 			}
 		},
 
+		// option setter/getter
+		option : function(option, value){
+
+			if (!value) {
+
+				return this.options[ option ];
+
+			} else {
+
+				this.options[ option ] = value;
+			}
+		},
 				
-		loadVideo : function(video, cue, addToPlaylist){
+		loadVideo : function(video, cue){
 
 			var self = this;
 
 			this._hideInfo();
 
 			function load(videoID){
-				
-				// (videoID, startSeconds, suggestQuality)
-				self.youtubePlayer.loadVideoById(videoID, 0);
+
+				( cue ) 
+				? self.cueVideo(videoID) 
+				: self.youtubePlayer.loadVideoById(videoID, 0);
 
 				// update the location hash
 				self.router.updateHash();
 
 				// TODO: need to determine if video has loaded successfully 
-				self._trigger(self, 'onVideoLoaded', [ videoID ]);
+				self._trigger(self, 'onVideoLoad', [ videoID ]);
 			}
 
-			if (video) {
+			if (video && video.id) {
 			
 				video = {
 					id: video.id,
@@ -451,12 +556,12 @@
 
 				if (cue) {
 
-					// append video to playlist
+					// append video to video list
 					this.options.playlist.videos.push(video);
 
 				} else {
 
-					// add video to playlist only if a title is present
+					// add video to video list only if a title is present
 					this.options.playlist.videos = video.title ?  [ video ] : [];
 				}
 
@@ -522,7 +627,6 @@
 				}
 			);
 		},
-
 			
 		pauseVideo : function(){
 
@@ -535,10 +639,10 @@
 
 			this.playVideo();
 		},
-
+		
 		muteVideo : function(button){
 
-			button.element.data('state') ? this.youtubePlayer.mute() : this.youtubePlayer.unMute();
+			this._state('mute') ? this.youtubePlayer.unMute() : this.youtubePlayer.mute();
 		},
 	
 		// FIXME
@@ -552,13 +656,13 @@
 			this.youtubePlayer.playVideo();
 		},
 
-		cueVideo : function(videoID){
+		cueVideo : function(videoID, startTime){
 
 			videoID = videoID || this.options.playlist.videos[this.keys.video].id;
 
 			this._trigger(this, 'onVideoCue', [ videoID ]);
 
-			return this.youtubePlayer.cueVideoById( videoID, 0);
+			return this.youtubePlayer.cueVideoById( videoID, startTime || 0);
 		},
 
 		randomVideo : function(){
@@ -574,11 +678,12 @@
 
 				this.keys.video--;
 
-				this.buttons.play.element.data('state', 0);
-
 				this.loadVideo();
 
 				this.playVideo();
+			} else {
+
+				// trigger callback
 			}
 		},
 
@@ -594,11 +699,12 @@
 					this.keys.video++;
 				}
 
-				this.buttons.play.element.data('state', 0);
-				
 				this.loadVideo();
 
 				this.playVideo();
+			} else {
+
+				// trigger callback
 			}
 		},
 		
@@ -613,15 +719,97 @@
 					}, this.options.playlistSpeed);
 		},
 
-		// TODO
 		fullscreen: function(button){
 
-			this.youtubePlayer.setSize(900, 900);	
+			var self = this;
+
+			this._hideInfo();
+
+			button.element
+				.one('open.player', function(){
+			
+					$.data(this, 'height', self.elements.playerVideo.height());
+					$.data(this, 'time', self.youtubePlayer.getCurrentTime());
+
+					$('body').css('overflow', 'hidden');
+		
+					self.elements.playerVideo
+						.css({
+							height: '100%',
+							width: '100%',
+							position: 'absolute',
+							top: 0,
+							left: 0,
+							zIndex: 9999
+						})
+						.appendTo( document.body );
+				})
+				.one('close.player', function(){
+					
+					$.data(this, 'time', self.youtubePlayer.getCurrentTime());
+					
+					$('body').css('overflow', 'auto');
+
+					self.elements.playerVideo
+						.height( $.data(this, 'height') )
+						.css('position', 'static')
+						.prependTo( self.elements.player );
+					
+					self._removeState('fullsreen');
+				})
+				.trigger('open.player');
+
+			// bind close player handlers
+
+			self.elements.playerVideo.one('dblclick', function(){
+
+				button.element.trigger('close.player');
+			});
+
+			$(document).one('keypress', function(event){
+
+				if (event.keyCode == 27) {
+
+					button.element.trigger('close.player');
+				}
+			});
+		},
+
+		// return the plugin object
+		plugin : function(){
+
+			return this;
+		},
+
+		// return an array of current player states
+		state : function(){
+
+			var self = this, states = [];
+
+			$.each(this._activeStates, function(key, val){
+
+				$.each(self._states, function(k, v){
+
+					if (val === v) states.push(k);
+				});
+			});
+
+			return states;
+		},
+
+		videos : function(){
+
+			return this.options.playlist.videos;
+		},
+
+		videoIndex : function(){
+
+			return this.keys.video;
 		},
 
 		_updateInfo : function(timeout, text){
 
-			if (!this.options.showTitleOverlay) return;
+			if (!this.options.showTitleOverlay || this._state('fullscreen')) return;
 				
 			text = text || ( 
 					this.options.playlist.videos[this.keys.video] ? 
@@ -630,11 +818,7 @@
 
 			var self = this;
 
-			if (
-				( this.buttons.play.element.data('state') || this.buttons.pause.element.data('state') ) 
-				&& this.elements.infobar.css('opacity') < 1
-				&& text
-			) {
+			if ( ( this._state('play') || this._state('pause') ) && this.elements.infobar.css('opacity') < 1 && text) {
 
 				clearTimeout(this.timer._hideInfo);
 
@@ -723,8 +907,9 @@
 				this
 				._createPlayer()
 				._createToolbar()
-				._createInfobar()
-				._createPlaylist();
+				._createInfobar();
+
+				this._createPlaylist();
 			}
 
 			return this;
@@ -736,7 +921,7 @@
 
 			this.elements.playerVideo.height( parseInt( this.options.height ) );
 
-			var swfpath = 'http://www.youtube.com/apiplayer?enablejsapi=1&version=3&playerapiid=youtube&hd=1&showinfo=0';
+			var swfpath = 'http://www.youtube.com/apiplayer?enablejsapi=1&version=3&playerapiid=youtube&hd=' + this.options.highDef + '&showinfo=0';
 
 			this.options.swfobject.embedSWF( swfpath, this.elements.playerObject[0].id, '100%', '100%', '8', null, null, this.options.videoParams);
 
@@ -760,11 +945,11 @@
 
 						button.element.removeClass('ui-state-active');
 
-						(button.element.data('state')) &&
+						(self._state(val)) &&
 						(button.toggle) && 
 						button.element.addClass('ui-state-active');
 
-						if (button.element.data('state') && button.toggleButton){
+						if (self._state(val) && button.toggleButton){
 
 							button.element.trigger('on');
 						}
@@ -772,11 +957,35 @@
 				}
 			};
 
+			function checkStateExists(state){
+
+				var found = false;
+
+				$.each(self._states, function(key){
+
+					if (state == key) {
+
+						found = true;
+
+						return false;
+					}
+				});
+
+				if (!found) {
+
+					self._states[state] = state;
+				}
+
+				return found;
+			}
+
 			$.each(this.options.toolbar.split(','), function(key, val) {
 
 				var button = self.buttons[val];
 
 				if (!button || !button.text) return true;
+
+				checkStateExists(val);
 
 				self.buttons[val].element =
 					$('<li class="ui-state-default ui-corner-all"></span>')
@@ -792,23 +1001,24 @@
 						var button = $(this).data('button'), toggle = 1;
 						
 						$(this).data('toggle', toggle);
-						$(this).data('state', 0);
+
+						self._removeState(val);
 
 						button.element.find('.ui-icon')
 							.removeClass( button.toggleButton.icon )
 							.addClass( button.icon );
 		
-						button.element.attr('title', button.text)
+						button.element.attr('title', button.text);
 
-						button.toggleButton.action.call(self, button)
-
+						self._trigger(self, button.toggleButton.action, [ button ] );
 					})
 					.bind('on', function(){
 
 						var button = $(this).data('button'), toggle = 0;
 						
 						$(this).data('toggle', toggle);
-						$(this).data('state', 1);
+
+						self._addState(val);
 
 						button.element.find('.ui-icon')
 							.removeClass( button.icon )
@@ -816,7 +1026,7 @@
 
 						button.element.attr('title', button.toggleButton.text)
 
-						button.action.call(self, button)
+						self._trigger(self, button.action, [ button ] );
 					})
 					.bind('toggle', function(){
 						
@@ -827,19 +1037,21 @@
 					.click(function(){
 
 						var button = $(this).data('button'), 
-							state = $(this).data('state');
+							state = self._state(val);
 
 						if (button.toggleButton) {
 							
 							$(this).trigger('toggle');
 
 						} else {
-						
-							$(this).data('state', state && button.toggle ? 0 : 1);
+
+							self._trigger(self, button.action, [ button ] );
+
+							( !button.toggle || ( button.toggle && state ) ) 
+							? self._removeState(val) 
+							: self._addState(val);
 
 							self.elements.toolbar.updateStates();
-
-							button.action.call(self, button);
 						}
 					})
 					.appendTo(self.elements.toolbar.container);
@@ -856,7 +1068,10 @@
 
 		_createTimeArea : function(){
 
-			this.elements.toolbar.time = $('<li class="youtube-player-time">').appendTo(this.elements.toolbar.container);
+			this.elements.toolbar.time = 
+				this.options.timeAppendTo 
+				? $('<span />').appendTo(this.options.timeAppendTo)
+				: $('<li class="youtube-player-time">').appendTo(this.elements.toolbar.container);
 
 			this.elements.toolbar.timeCurrent = $('<span>').html('0:00').appendTo(this.elements.toolbar.time);
 
@@ -890,7 +1105,7 @@
 
 				self.keys.video = $.inArray( videoData.id, self.videoIds );
 
-				self.buttons.play.element.data('state', 0);
+				self._removeState('play');
 				
 				self._updatePlaylist();
 
@@ -1067,10 +1282,9 @@
 		fullscreen: {
 			text: 'Full screen',
 			icon: 'ui-icon-arrow-4-diag',
-			toggle: 1,
-			action: function(){
+			action: function(button){
 
-				this.fullscreen();
+				this.fullscreen(button);
 			}
 		},
 		playlistToggle: { 
