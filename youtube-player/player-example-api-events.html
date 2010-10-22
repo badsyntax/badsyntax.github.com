@@ -7,16 +7,16 @@
 	<link type="text/css" rel="stylesheet" media="all" href="css/youtube-player.css" />
 	<link type="text/css" rel="stylesheet" media="all" href="css/example_files/example.css" />
 	<link type="text/css" rel="stylesheet" media="all" href="http://fonts.googleapis.com/css?family=Droid+Sans&amp;subset=latin" />
-	<script type="text/javascript">
-		var _gaq = _gaq || [];
-		_gaq.push(['_setAccount', 'UA-1636725-23']);
-		_gaq.push(['_trackPageview']);
-		(function() {
-			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		})();
-	</script>
+        <script type="text/javascript">
+                var _gaq = _gaq || [];
+                _gaq.push(['_setAccount', 'UA-1636725-23']);
+                _gaq.push(['_trackPageview']);
+                (function() {
+                        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                })();
+        </script>
 </head>
 <body class="advanced">
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
@@ -32,9 +32,12 @@
 	<div id="centered">
 		<div class="clearfix">
 
-			<div class="helper-left">
+			<div class="helper-left" style="width:430px">
 
-				<h1>jQuery Youtube Player</h1>
+				<h1>
+					<a href="../">Home</a>
+					jQuery Youtube Player
+				</h1>
 
 				<div class="youtube-player">
 					<div class="youtube-player-video">
@@ -46,7 +49,7 @@
 
 			</div>
 
-			<div class="helper-right" style="width:324px">
+			<div class="helper-right" style="width:330px">
 
 				<h2>Options:</h2>
 
@@ -71,10 +74,6 @@
 						<label>
 							Update hash
 							<input type="checkbox" name="updateHash" value="1" />
-						</label>
-						<label>
-							OS Scrollbar
-							<input type="checkbox" name="playlistScrollbarOS" />
 						</label>
 						<label>
 							Width
@@ -279,6 +278,17 @@
 				player.player('destroy');
 
 				$('.youtube-player').player( playerConfig );
+			});
+
+			$('input[name=videoThumbs]').click(function(){
+				
+				if (this.checked) {
+
+					$('input[name=playlistHeight]').val('2');
+				} else {
+
+					$('input[name=playlistHeight]').val('5');
+				}
 			});
 
 		})(window.jQuery);
