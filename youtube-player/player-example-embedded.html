@@ -1,10 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-	<title>jQuery Youtube Player Example - Positioning</title>
+	<title>jQuery Youtube Player - Embedded Example</title>
 	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-        <link type="text/css" rel="stylesheet" media="all" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/black-tie/jquery-ui.css" />
-        <link type="text/css" rel="stylesheet" media="all" href="css/youtube-player.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/black-tie/jquery-ui.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/youtube-player.css" />
         <link type="text/css" rel="stylesheet" media="all" href="css/example_files/example.css" />
         <link type="text/css" rel="stylesheet" media="all" href="http://fonts.googleapis.com/css?family=Droid+Sans&amp;subset=latin" />
         <script type="text/javascript">
@@ -18,7 +18,7 @@
                 })();
         </script>
 </head>
-<body class="positioning">
+<body class="basic">
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
 	<script type="text/javascript" src="js/jquery.youtube.player.js"></script>
@@ -36,10 +36,6 @@
 			jQuery Youtube Player
 		</h1>
 
-		<p>
-			This example demonstrates custom positioning of the video elements.
-		</p>
-
 		<div class="youtube-player">
 			<div class="youtube-player-video">
 				<div class="youtube-player-object">
@@ -47,22 +43,6 @@
 				</div>
 			</div>
 		</div>
-
-		<br /><br />
-
-		Toolbar: <br />
-		<div id="toolbar"></div>
-
-		<br />
-
-		Playlist: <br />
-		<div id="playlist"></div>
-
-		<br />
-
-		Time: <br />
-		<div id="time"></div>
-
 	</div>
 
 	<script type="text/javascript">
@@ -71,16 +51,15 @@
 		(function($){
 			var config =  {
 
-				toolbarAppendTo: '#toolbar',	// selector
-				playlistAppendTo: '#playlist',	// selector
-				timeAppendTo: '#time',		// selector
+				repeatPlaylist: 1,
+
+				chromeless: 0,
 
 				// Custom playlist
 				playlist: {
 					title: 'Random videos',
 					videos: [
 						{ id: 'wDowSzVgjXI', title: 'The All Seeing I - Beat Goes On HQ' },
-						{ id: '1gD8nV8RlPU', title: 'Dai Mahou Touge - Vegetable Suicide' },
 						{ id: 'hPzNl6NKAG0', title: 'Maru the cat' },
 						{ id: 'lvpuT3aoypE', title: 'All Online Data Lost After Internet Crash' },
 						{ id: 'Kv6Ewqx3PMs', title: 'Mr. Oizo Flat Beat' },
