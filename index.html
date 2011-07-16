@@ -50,76 +50,8 @@
 		</nav>
 		
 		<div id="activity">
-			<section id="loader">
-				<p>
-					<img src="/img/ajax_load.gif" /> loading github data..
-				</p>
-			</section>
-			<section id="repositories">
-				<h2>Repositories</h2>
-				<p>
-					I currently have ${public_repo_count} public repositories on github, am following ${following_count} coders, 
-					have ${followers_count} followers.
-				</p>
-			</section>
-			<section id="commits">
-				<a class="more-info" href="http://github.com/badsyntax">More info</a>
-				<h2>Latest commits</h2>
-				<div id="commits-scroll">
-					<table>
-						<tbody>
-							<tr>
-								<td class="col1">${committed_date_formatted}</td>
-								<td class="col2">&nbsp;-&nbsp;<a href="">${repo}</a> - ${message}</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</section>
+			
 		</div>
 	</div>
-
-	<script type="text/javascript">
-
-		(function( $ ){
-
-			var github = new window.github({ user: 'badsyntax' });
-
-			github.getUserInfo(function(){
-
-				github.getLatestCommits(function(){
-					
-					var commitstr = '', template = $('#commits-scroll tbody').children().clone();
-
-					$('#commits-scroll tbody').empty();
-
-					$.each(this.data.latestcommits, function(i){
-
-						template
-							.clone()
-							.render( this )
-							.find('a')
-								.attr('href', this.url)
-								.end()
-							.appendTo( $('#commits-scroll table') )
-					});
-
-					$('#activity section').show();
-
-					$('#repositories').render( this.data.userinfo );
-
-					$('#commits-scroll').scrollbar().find('tr:odd').addClass('odd');
-					
-					$('#activity section:not(#loader)').hide();
-					
-					$('#loader').fadeOut('slow', function(){
-
-						$('#activity section:not(#loader)').slideDown('slow');
-					});
-				});
-			});
-
-		})( jQuery );
-	</script>
 </body>
 </html>
