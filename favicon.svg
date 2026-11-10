@@ -1,1 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#222"/><text x="32" y="44" font-family="monospace" font-size="30" font-weight="bold" fill="#fff" text-anchor="middle">{B}</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#c2410c"/>
+  <circle cx="32" cy="32" r="22" fill="#fff"/>
+  <circle cx="32" cy="32" r="17" fill="#c2410c"/>
+  <circle cx="32" cy="32" r="8" fill="#fff"/>
+</svg>
